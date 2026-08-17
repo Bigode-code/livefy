@@ -316,6 +316,10 @@ Object.assign(entries,{
   'No game bridge is configured. Connect a runtime before creating interaction mappings.':['Nenhuma ponte de game está configurada. Conecte um runtime antes de criar mapeamentos de interação.','No hay un puente de juego configurado. Conecta un entorno antes de crear asignaciones de interacción.','尚未配置游戏桥接。创建互动映射前请连接运行环境。'],'No subscription or billing plan is attached to this workspace.':['Nenhuma assinatura ou plano de cobrança está vinculado a este espaço.','No hay ninguna suscripción ni plan de facturación vinculado a este espacio.','此工作区尚未绑定订阅或计费方案。']
 });
 
+Object.assign(entries,{
+  'Chrome extension':['Extensão do Chrome','Extensión de Chrome','Chrome 扩展程序'],'Installation guide':['Guia de instalação','Guía de instalación','安装指南'],'Connect a Chrome browser':['Conectar um navegador Chrome','Conectar un navegador Chrome','连接 Chrome 浏览器'],'Generate a one-time code, then enter it in Livefy Live Bridge. The code expires after 10 minutes and can only be claimed once.':['Gere um código de uso único e insira-o no Livefy Live Bridge. Ele expira em 10 minutos e só pode ser usado uma vez.','Genera un código de un solo uso e introdúcelo en Livefy Live Bridge. Caduca en 10 minutos y solo puede usarse una vez.','生成一次性代码并输入 Livefy Live Bridge。代码将在 10 分钟后过期且只能使用一次。'],'Generate pairing code':['Gerar código de pareamento','Generar código de vinculación','生成配对代码'],'Generating…':['Gerando…','Generando…','正在生成…'],'The extension database migration still needs to be applied.':['A migração do banco para a extensão ainda precisa ser aplicada.','Aún debe aplicarse la migración de base de datos de la extensión.','仍需应用扩展程序数据库迁移。'],'ONE-TIME PAIRING CODE':['CÓDIGO DE PAREAMENTO ÚNICO','CÓDIGO DE VINCULACIÓN ÚNICO','一次性配对代码'],'Copy code':['Copiar código','Copiar código','复制代码'],'Copied':['Copiado','Copiado','已复制'],'Capture is explicit and limited.':['A captura é explícita e limitada.','La captura es explícita y limitada.','采集明确且受限。'],'The extension reads only visible TikTok LIVE comments, products and audience metrics while enabled. It does not access passwords, cookies, private messages or other websites.':['Enquanto ativada, a extensão lê apenas comentários, produtos e métricas visíveis da LIVE do TikTok. Ela não acessa senhas, cookies, mensagens privadas ou outros sites.','Mientras está activa, la extensión solo lee comentarios, productos y métricas visibles del LIVE de TikTok. No accede a contraseñas, cookies, mensajes privados ni otros sitios.','启用时，扩展程序仅读取可见的 TikTok LIVE 评论、商品和观众指标，不访问密码、Cookie、私信或其他网站。'],'Connected browsers':['Navegadores conectados','Navegadores conectados','已连接的浏览器'],'Revoked':['Revogado','Revocado','已撤销'],'Offline':['Offline','Sin conexión','离线'],'Revoke':['Revogar','Revocar','撤销'],'No TikTok page detected':['Nenhuma página do TikTok detectada','No se detectó ninguna página de TikTok','未检测到 TikTok 页面'],'No browser connected':['Nenhum navegador conectado','Ningún navegador conectado','未连接浏览器'],'Install the extension and generate a pairing code to begin.':['Instale a extensão e gere um código de pareamento para começar.','Instala la extensión y genera un código de vinculación para comenzar.','安装扩展程序并生成配对代码即可开始。'],'Never connected':['Nunca conectado','Nunca conectado','从未连接']
+});
+
 const locales:Locale[]=localeOptions.map(option=>option.locale);
 const textOriginals=new WeakMap<Text,string>();
 const textRenderedValues=new WeakMap<Text,string>();
@@ -356,6 +360,11 @@ function detectedPreferences(){
 }
 
 type I18nValue={locale:Locale;setLocale:(locale:Locale)=>void;currency:Currency;setCurrency:(currency:Currency)=>void;t:(value:string)=>string;formatCurrency:(value:number,options?:Intl.NumberFormatOptions)=>string};
+Object.assign(entries,{
+  'active device':['dispositivo ativo','dispositivo activo','个活跃设备'],
+  'active devices':['dispositivos ativos','dispositivos activos','个活跃设备'],
+});
+
 const I18nContext=createContext<I18nValue|null>(null);
 export function I18nProvider({children}:{children:ReactNode}){
   const detected=useMemo(detectedPreferences,[]);

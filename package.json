@@ -9,6 +9,7 @@
     "typecheck": "tsc -b --pretty false",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
+    "extension:icons": "node scripts/render-extension-icons.mjs",
     "test:visual": "playwright test",
     "preview": "vite preview --host 127.0.0.1"
   },

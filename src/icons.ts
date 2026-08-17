@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import {
-  Activity, Add, ArrangeVertical, ArrowDown2, ArrowRight as SaxArrowRight,
+  Activity, Add, ArrangeVertical, ArrowDown2, ArrowRight as SaxArrowRight, Copy as SaxCopy,
   ArrowRight2, ArrowRotateLeft, ArrowSwapVertical, Back, Box1, Calendar,
   Category2, Chart1, Chart2, CloseCircle, CloseSquare, Cloud as SaxCloud, Diagram,
   Apple as SaxApple, CodeCircle, DocumentText, Eye as SaxEye, EyeSlash as SaxEyeSlash, Filter, Global, Google as SaxGoogle, HambergerMenu, Health, Hierarchy3, I3Dcube,
@@ -81,3 +81,4 @@ export const Processor=visible(Cpu);
 export const Link=visible(Link2);
 export const Layers=visible(Layer);
 export const Logout=visible(SaxLogout);
+export const Copy=visible(SaxCopy);

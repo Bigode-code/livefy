@@ -1,0 +1,107 @@
+{
+  "extensionName": {
+    "message": "Livefy Live Bridge"
+  },
+  "extensionDescription": {
+    "message": "Connects visible TikTok LIVE comments, products and audience metrics to your Livefy workspace."
+  },
+  "liveBridge": {
+    "message": "Live Bridge"
+  },
+  "connectTitle": {
+    "message": "Connect this browser"
+  },
+  "connectHint": {
+    "message": "Generate a pairing code in Livefy Settings."
+  },
+  "deviceName": {
+    "message": "Device name"
+  },
+  "pairingCode": {
+    "message": "Pairing code"
+  },
+  "disclosureTitle": {
+    "message": "Data disclosure"
+  },
+  "disclosureBody": {
+    "message": "When enabled, Livefy reads visible TikTok LIVE comments, product cards, page status and audience counts, then sends them securely to your workspace. It never reads passwords, cookies, private messages or form entries."
+  },
+  "consentText": {
+    "message": "I understand and allow this capture while the switch is on."
+  },
+  "connectButton": {
+    "message": "Connect browser"
+  },
+  "connected": {
+    "message": "Connected"
+  },
+  "captureTitle": {
+    "message": "Capture TikTok LIVE"
+  },
+  "captureDetail": {
+    "message": "Visible comments, products and audience metrics"
+  },
+  "pendingEvents": {
+    "message": "Pending events"
+  },
+  "retry": {
+    "message": "Retry connection"
+  },
+  "disconnect": {
+    "message": "Disconnect this browser"
+  },
+  "openLivefy": {
+    "message": "Open Livefy"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "settingsTitle": {
+    "message": "Live Bridge settings"
+  },
+  "endpointsTitle": {
+    "message": "Connection endpoints"
+  },
+  "endpointsIntro": {
+    "message": "Production defaults work for most installations. Only change these values for a trusted Livefy deployment."
+  },
+  "bridgeApi": {
+    "message": "Bridge API"
+  },
+  "dashboard": {
+    "message": "Livefy dashboard"
+  },
+  "saveSettings": {
+    "message": "Save settings"
+  },
+  "settingsSaved": {
+    "message": "Settings saved."
+  },
+  "privacyTitle": {
+    "message": "Privacy and captured data"
+  },
+  "privacySummary": {
+    "message": "The extension only inspects visible TikTok LIVE comments, product cards, page type and audience count while capture is enabled. It does not access cookies, passwords, payment data, private messages, browsing history outside TikTok or typed form values."
+  },
+  "readPrivacy": {
+    "message": "Read the complete privacy disclosure"
+  },
+  "connectionInterrupted": {
+    "message": "Connection interrupted"
+  },
+  "lastSync": {
+    "message": "Last sync"
+  },
+  "eventsRemainQueued": {
+    "message": "Events remain queued locally."
+  },
+  "connecting": {
+    "message": "Connecting…"
+  },
+  "disconnectConfirm": {
+    "message": "Disconnect this browser from Livefy?"
+  },
+  "never": {
+    "message": "Never"
+  }
+}

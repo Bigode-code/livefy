@@ -1,0 +1,107 @@
+{
+  "extensionName": {
+    "message": "Livefy Live Bridge"
+  },
+  "extensionDescription": {
+    "message": "Conecta comentarios, productos y métricas visibles del LIVE de TikTok a tu espacio Livefy."
+  },
+  "liveBridge": {
+    "message": "Puente del LIVE"
+  },
+  "connectTitle": {
+    "message": "Conectar este navegador"
+  },
+  "connectHint": {
+    "message": "Genera un código de vinculación en Configuración de Livefy."
+  },
+  "deviceName": {
+    "message": "Nombre del dispositivo"
+  },
+  "pairingCode": {
+    "message": "Código de vinculación"
+  },
+  "disclosureTitle": {
+    "message": "Aviso sobre los datos"
+  },
+  "disclosureBody": {
+    "message": "Cuando está activa, Livefy lee comentarios, productos, estado de página y audiencia visibles del LIVE de TikTok y los envía de forma segura a tu espacio. Nunca lee contraseñas, cookies, mensajes privados ni formularios."
+  },
+  "consentText": {
+    "message": "Entiendo y permito esta captura mientras el interruptor esté activo."
+  },
+  "connectButton": {
+    "message": "Conectar navegador"
+  },
+  "connected": {
+    "message": "Conectado"
+  },
+  "captureTitle": {
+    "message": "Capturar LIVE de TikTok"
+  },
+  "captureDetail": {
+    "message": "Comentarios, productos y audiencia visibles"
+  },
+  "pendingEvents": {
+    "message": "Eventos pendientes"
+  },
+  "retry": {
+    "message": "Reintentar conexión"
+  },
+  "disconnect": {
+    "message": "Desconectar este navegador"
+  },
+  "openLivefy": {
+    "message": "Abrir Livefy"
+  },
+  "settings": {
+    "message": "Configuración"
+  },
+  "settingsTitle": {
+    "message": "Configuración del puente"
+  },
+  "endpointsTitle": {
+    "message": "Endpoints de conexión"
+  },
+  "endpointsIntro": {
+    "message": "Los valores de producción sirven para la mayoría de instalaciones. Cámbialos solo para un despliegue Livefy confiable."
+  },
+  "bridgeApi": {
+    "message": "API del puente"
+  },
+  "dashboard": {
+    "message": "Panel Livefy"
+  },
+  "saveSettings": {
+    "message": "Guardar configuración"
+  },
+  "settingsSaved": {
+    "message": "Configuración guardada."
+  },
+  "privacyTitle": {
+    "message": "Privacidad y datos capturados"
+  },
+  "privacySummary": {
+    "message": "La extensión solo inspecciona comentarios, productos, tipo de página y audiencia visibles del LIVE de TikTok mientras la captura está activa. No accede a cookies, contraseñas, pagos, mensajes privados, historial fuera de TikTok ni formularios."
+  },
+  "readPrivacy": {
+    "message": "Leer el aviso completo de privacidad"
+  },
+  "connectionInterrupted": {
+    "message": "Conexión interrumpida"
+  },
+  "lastSync": {
+    "message": "Última sincronización"
+  },
+  "eventsRemainQueued": {
+    "message": "Los eventos permanecen en la cola local."
+  },
+  "connecting": {
+    "message": "Conectando…"
+  },
+  "disconnectConfirm": {
+    "message": "¿Desconectar este navegador de Livefy?"
+  },
+  "never": {
+    "message": "Nunca"
+  }
+}

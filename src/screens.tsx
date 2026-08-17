@@ -3,6 +3,7 @@ import * as Icon from './icons';
 import type { PageId,StatusTone } from './types';
 import { Button,EmptyState,Metric,PageHeader,Search,Section,SelectField,Skeleton,Status,Switch,TextField } from './components';
 import StudioOverview from './components/ui/studio-overview';
+import { ExtensionDevices } from './components/ui/extension-devices';
 import { useI18n } from './i18n';
 import { useLivefyData,type LiveEvent } from './livefy-data';
 import { supabase } from './lib/supabase';
@@ -109,6 +110,7 @@ function Settings(){
   return <div className="page settings-page"><PageHeader eyebrow="System" title="Settings" description="Application behavior for this browser and workspace." actions={<Button kind="primary" disabled={saving} onClick={()=>void save()}>{saving?'Saving…':'Save settings'}</Button>}/>{message&&<ActionMessage message={message}/>}
     <Section title="Appearance"><div className="form-grid"><SelectField label="Appearance" value={appearance} options={['Light','Dark']} onChange={changeAppearance}/><SelectField label="Interface density" value={density} options={['Comfortable','Compact']} onChange={changeDensity}/></div></Section>
     <Section title="Runtime"><div className="form-grid"><TextField type="url" label="Runtime address" value={address} onChange={event=>setAddress(event.target.value)} placeholder="https://runtime.example.com" description="Secure URL used by the desktop bridge." wide/><TextField type="number" label="Heartbeat interval" value={heartbeat} onChange={event=>setHeartbeat(event.target.value)} placeholder="30" description="Seconds between runtime checks."/></div></Section>
+    {workspace&&<ExtensionDevices workspaceId={workspace.id}/>}
   </div>
 }
 

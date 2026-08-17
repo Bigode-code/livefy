@@ -1,0 +1,107 @@
+{
+  "extensionName": {
+    "message": "Livefy Live Bridge"
+  },
+  "extensionDescription": {
+    "message": "Подключает видимые комментарии, товары и метрики аудитории TikTok LIVE к рабочему пространству Livefy."
+  },
+  "liveBridge": {
+    "message": "Мост эфира"
+  },
+  "connectTitle": {
+    "message": "Подключить этот браузер"
+  },
+  "connectHint": {
+    "message": "Создайте код подключения в настройках Livefy."
+  },
+  "deviceName": {
+    "message": "Название устройства"
+  },
+  "pairingCode": {
+    "message": "Код подключения"
+  },
+  "disclosureTitle": {
+    "message": "Уведомление о данных"
+  },
+  "disclosureBody": {
+    "message": "Когда функция включена, Livefy считывает видимые комментарии TikTok LIVE, карточки товаров, состояние страницы и число зрителей и безопасно отправляет их в ваше пространство. Пароли, cookie, личные сообщения и формы не считываются."
+  },
+  "consentText": {
+    "message": "Я понимаю и разрешаю сбор данных, пока переключатель включён."
+  },
+  "connectButton": {
+    "message": "Подключить браузер"
+  },
+  "connected": {
+    "message": "Подключено"
+  },
+  "captureTitle": {
+    "message": "Собирать данные TikTok LIVE"
+  },
+  "captureDetail": {
+    "message": "Видимые комментарии, товары и метрики аудитории"
+  },
+  "pendingEvents": {
+    "message": "Ожидающие события"
+  },
+  "retry": {
+    "message": "Повторить подключение"
+  },
+  "disconnect": {
+    "message": "Отключить этот браузер"
+  },
+  "openLivefy": {
+    "message": "Открыть Livefy"
+  },
+  "settings": {
+    "message": "Настройки"
+  },
+  "settingsTitle": {
+    "message": "Настройки моста"
+  },
+  "endpointsTitle": {
+    "message": "Точки подключения"
+  },
+  "endpointsIntro": {
+    "message": "Производственные значения подходят большинству установок. Изменяйте их только для доверенного развёртывания Livefy."
+  },
+  "bridgeApi": {
+    "message": "API моста"
+  },
+  "dashboard": {
+    "message": "Панель Livefy"
+  },
+  "saveSettings": {
+    "message": "Сохранить настройки"
+  },
+  "settingsSaved": {
+    "message": "Настройки сохранены."
+  },
+  "privacyTitle": {
+    "message": "Конфиденциальность и собираемые данные"
+  },
+  "privacySummary": {
+    "message": "Расширение проверяет только видимые комментарии TikTok LIVE, карточки товаров, тип страницы и число зрителей при включённом сборе. Оно не получает доступ к cookie, паролям, платежам, личным сообщениям, истории вне TikTok и данным форм."
+  },
+  "readPrivacy": {
+    "message": "Прочитать полное уведомление о конфиденциальности"
+  },
+  "connectionInterrupted": {
+    "message": "Соединение прервано"
+  },
+  "lastSync": {
+    "message": "Последняя синхронизация"
+  },
+  "eventsRemainQueued": {
+    "message": "События остаются в локальной очереди."
+  },
+  "connecting": {
+    "message": "Подключение…"
+  },
+  "disconnectConfirm": {
+    "message": "Отключить этот браузер от Livefy?"
+  },
+  "never": {
+    "message": "Никогда"
+  }
+}

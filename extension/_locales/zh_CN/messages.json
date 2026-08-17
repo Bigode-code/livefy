@@ -1,0 +1,107 @@
+{
+  "extensionName": {
+    "message": "Livefy Live Bridge"
+  },
+  "extensionDescription": {
+    "message": "将可见的 TikTok LIVE 评论、商品和观众指标连接到 Livefy 工作区。"
+  },
+  "liveBridge": {
+    "message": "直播桥接"
+  },
+  "connectTitle": {
+    "message": "连接此浏览器"
+  },
+  "connectHint": {
+    "message": "请在 Livefy 设置中生成配对代码。"
+  },
+  "deviceName": {
+    "message": "设备名称"
+  },
+  "pairingCode": {
+    "message": "配对代码"
+  },
+  "disclosureTitle": {
+    "message": "数据声明"
+  },
+  "disclosureBody": {
+    "message": "启用后，Livefy 会读取可见的 TikTok LIVE 评论、商品卡、页面状态和观众数量，并安全发送到您的工作区。绝不读取密码、Cookie、私信或表单内容。"
+  },
+  "consentText": {
+    "message": "我理解并允许在开关启用期间进行此采集。"
+  },
+  "connectButton": {
+    "message": "连接浏览器"
+  },
+  "connected": {
+    "message": "已连接"
+  },
+  "captureTitle": {
+    "message": "采集 TikTok LIVE"
+  },
+  "captureDetail": {
+    "message": "可见评论、商品和观众指标"
+  },
+  "pendingEvents": {
+    "message": "待发送事件"
+  },
+  "retry": {
+    "message": "重试连接"
+  },
+  "disconnect": {
+    "message": "断开此浏览器"
+  },
+  "openLivefy": {
+    "message": "打开 Livefy"
+  },
+  "settings": {
+    "message": "设置"
+  },
+  "settingsTitle": {
+    "message": "桥接设置"
+  },
+  "endpointsTitle": {
+    "message": "连接端点"
+  },
+  "endpointsIntro": {
+    "message": "生产默认值适用于大多数安装。仅在可信的 Livefy 部署中更改。"
+  },
+  "bridgeApi": {
+    "message": "桥接 API"
+  },
+  "dashboard": {
+    "message": "Livefy 控制台"
+  },
+  "saveSettings": {
+    "message": "保存设置"
+  },
+  "settingsSaved": {
+    "message": "设置已保存。"
+  },
+  "privacyTitle": {
+    "message": "隐私与采集数据"
+  },
+  "privacySummary": {
+    "message": "启用采集时，扩展程序仅读取可见的 TikTok LIVE 评论、商品、页面类型和观众数量。不访问 Cookie、密码、支付数据、私信、TikTok 之外的浏览历史或表单输入。"
+  },
+  "readPrivacy": {
+    "message": "阅读完整隐私声明"
+  },
+  "connectionInterrupted": {
+    "message": "连接已中断"
+  },
+  "lastSync": {
+    "message": "上次同步"
+  },
+  "eventsRemainQueued": {
+    "message": "事件仍保存在本地队列中。"
+  },
+  "connecting": {
+    "message": "正在连接…"
+  },
+  "disconnectConfirm": {
+    "message": "要断开此浏览器与 Livefy 的连接吗？"
+  },
+  "never": {
+    "message": "从未"
+  }
+}

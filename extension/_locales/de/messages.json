@@ -1,0 +1,107 @@
+{
+  "extensionName": {
+    "message": "Livefy Live Bridge"
+  },
+  "extensionDescription": {
+    "message": "Verbindet sichtbare TikTok-LIVE-Kommentare, Produkte und Publikumsmetriken mit Ihrem Livefy-Arbeitsbereich."
+  },
+  "liveBridge": {
+    "message": "Live-Brücke"
+  },
+  "connectTitle": {
+    "message": "Diesen Browser verbinden"
+  },
+  "connectHint": {
+    "message": "Erzeugen Sie einen Kopplungscode in den Livefy-Einstellungen."
+  },
+  "deviceName": {
+    "message": "Gerätename"
+  },
+  "pairingCode": {
+    "message": "Kopplungscode"
+  },
+  "disclosureTitle": {
+    "message": "Datenhinweis"
+  },
+  "disclosureBody": {
+    "message": "Wenn aktiviert, liest Livefy sichtbare TikTok-LIVE-Kommentare, Produktkarten, Seitenstatus und Zuschauerzahlen und sendet sie sicher an Ihren Arbeitsbereich. Passwörter, Cookies, private Nachrichten und Formulare werden nie gelesen."
+  },
+  "consentText": {
+    "message": "Ich verstehe und erlaube diese Erfassung, solange der Schalter aktiv ist."
+  },
+  "connectButton": {
+    "message": "Browser verbinden"
+  },
+  "connected": {
+    "message": "Verbunden"
+  },
+  "captureTitle": {
+    "message": "TikTok LIVE erfassen"
+  },
+  "captureDetail": {
+    "message": "Sichtbare Kommentare, Produkte und Publikumsmetriken"
+  },
+  "pendingEvents": {
+    "message": "Ausstehende Ereignisse"
+  },
+  "retry": {
+    "message": "Verbindung wiederholen"
+  },
+  "disconnect": {
+    "message": "Diesen Browser trennen"
+  },
+  "openLivefy": {
+    "message": "Livefy öffnen"
+  },
+  "settings": {
+    "message": "Einstellungen"
+  },
+  "settingsTitle": {
+    "message": "Brückeneinstellungen"
+  },
+  "endpointsTitle": {
+    "message": "Verbindungsendpunkte"
+  },
+  "endpointsIntro": {
+    "message": "Die Produktionsvorgaben funktionieren für die meisten Installationen. Nur für eine vertrauenswürdige Livefy-Bereitstellung ändern."
+  },
+  "bridgeApi": {
+    "message": "Brücken-API"
+  },
+  "dashboard": {
+    "message": "Livefy-Dashboard"
+  },
+  "saveSettings": {
+    "message": "Einstellungen speichern"
+  },
+  "settingsSaved": {
+    "message": "Einstellungen gespeichert."
+  },
+  "privacyTitle": {
+    "message": "Datenschutz und erfasste Daten"
+  },
+  "privacySummary": {
+    "message": "Die Erweiterung prüft nur sichtbare TikTok-LIVE-Kommentare, Produktkarten, Seitentyp und Zuschauerzahl bei aktivierter Erfassung. Sie greift nicht auf Cookies, Passwörter, Zahlungsdaten, private Nachrichten, Verlauf außerhalb TikTok oder Formulareingaben zu."
+  },
+  "readPrivacy": {
+    "message": "Vollständigen Datenschutzhinweis lesen"
+  },
+  "connectionInterrupted": {
+    "message": "Verbindung unterbrochen"
+  },
+  "lastSync": {
+    "message": "Letzte Synchronisierung"
+  },
+  "eventsRemainQueued": {
+    "message": "Ereignisse bleiben lokal in der Warteschlange."
+  },
+  "connecting": {
+    "message": "Verbindung wird hergestellt…"
+  },
+  "disconnectConfirm": {
+    "message": "Diesen Browser von Livefy trennen?"
+  },
+  "never": {
+    "message": "Nie"
+  }
+}
