@@ -11,7 +11,7 @@ import { LivefyDataProvider,useLivefyData } from './livefy-data';
 import { supabase } from './lib/supabase';
 
 const groups:[string,{id:PageId;label:string;icon:keyof typeof Icon}[]][]=[
- ['Studio',[{id:'overview',label:'Overview',icon:'SquaresFour'},{id:'live',label:'Shop LIVE',icon:'Broadcast'},{id:'games',label:'Game LIVE',icon:'GameController'},{id:'create',label:'Creation studio',icon:'Sparkle'}]],
+ ['Studio',[{id:'overview',label:'Overview',icon:'SquaresFour'},{id:'studio',label:'Broadcast Studio',icon:'VideoPlay'},{id:'live',label:'Shop LIVE',icon:'Broadcast'},{id:'games',label:'Game LIVE',icon:'GameController'},{id:'create',label:'Creation studio',icon:'Sparkle'}]],
  ['Production',[{id:'media',label:'Media',icon:'PlayCircle'},{id:'products',label:'Products',icon:'Package'},{id:'automation',label:'Automation',icon:'FlowArrow'},{id:'rules',label:'Rules',icon:'TreeStructure'},{id:'comments',label:'Comments',icon:'ChatsCircle'}]],
  ['Monitor',[{id:'analytics',label:'Analytics',icon:'ChartLineUp'},{id:'events',label:'Event Log',icon:'ListMagnifyingGlass'},{id:'compliance',label:'Compliance',icon:'ShieldCheck'}]],
  ['Account',[{id:'subscription',label:'Subscription',icon:'CreditCard'},{id:'notifications',label:'Notifications',icon:'Bell'},{id:'diagnostics',label:'Diagnostics',icon:'Pulse'},{id:'settings',label:'Settings',icon:'GearSix'}]]

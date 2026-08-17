@@ -9,6 +9,7 @@ import { useLivefyData,type LiveEvent } from './livefy-data';
 import { supabase } from './lib/supabase';
 
 const CreationStudio=lazy(()=>import('./components/ui/creation-studio'));
+const BroadcastStudio=lazy(()=>import('./components/ui/broadcast-studio'));
 
 function Overview(){return <StudioOverview/>}
 
@@ -144,4 +145,4 @@ function relativeTime(value:string){const seconds=Math.max(0,Math.floor((Date.no
 function eventTone(severity:LiveEvent['severity']):StatusTone{return severity==='success'?'online':severity==='warning'?'warning':severity==='error'?'error':'neutral'}
 function systemTone(status:string):StatusTone{const normalized=status.toLowerCase();return ['healthy','connected','online'].includes(normalized)?'online':normalized==='degraded'?'warning':normalized==='error'?'error':'neutral'}
 
-export function Screens({page}:{page:PageId}){switch(page){case'overview':return <Overview/>;case'live':return <Live/>;case'games':return <GameLive/>;case'create':return <Suspense fallback={<LoadingPage title="Creation studio"/>}><CreationStudio/></Suspense>;case'media':return <Media/>;case'products':return <Products/>;case'automation':return <Automation/>;case'rules':return <Rules/>;case'comments':return <Comments/>;case'notifications':return <Notifications/>;case'diagnostics':return <Diagnostics/>;case'subscription':return <Subscription/>;case'settings':return <Settings/>;default:return <Generic page={page}/>}}
+export function Screens({page}:{page:PageId}){switch(page){case'overview':return <Overview/>;case'studio':return <Suspense fallback={<LoadingPage title="Broadcast Studio"/>}><BroadcastStudio/></Suspense>;case'live':return <Live/>;case'games':return <GameLive/>;case'create':return <Suspense fallback={<LoadingPage title="Creation studio"/>}><CreationStudio/></Suspense>;case'media':return <Media/>;case'products':return <Products/>;case'automation':return <Automation/>;case'rules':return <Rules/>;case'comments':return <Comments/>;case'notifications':return <Notifications/>;case'diagnostics':return <Diagnostics/>;case'subscription':return <Subscription/>;case'settings':return <Settings/>;default:return <Generic page={page}/>}}

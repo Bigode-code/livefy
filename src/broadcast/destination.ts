@@ -1,0 +1,2 @@
+export interface BroadcastDestination{readonly id:string;connect(stream:MediaStream):Promise<void>;disconnect():Promise<void>}
+export class DebugDestination implements BroadcastDestination{readonly id='debug';constructor(private video:HTMLVideoElement){}async connect(stream:MediaStream){this.video.srcObject=stream;this.video.muted=true;this.video.playsInline=true;try{await this.video.play()}catch(error){if(!(error instanceof DOMException)||error.name!=='AbortError')throw error}}async disconnect(){this.video.pause();this.video.srcObject=null}}
