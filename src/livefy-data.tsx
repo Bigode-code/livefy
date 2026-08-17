@@ -45,7 +45,7 @@ export function LivefyDataProvider({children}:{children:ReactNode}){
       supabase.from('products').select('*').eq('workspace_id',workspaceId).order('created_at',{ascending:false}),
       supabase.from('events').select('*').eq('workspace_id',workspaceId).order('created_at',{ascending:false}).limit(100),
       supabase.from('comments').select('*').eq('workspace_id',workspaceId).order('created_at',{ascending:false}).limit(100),
-      supabase.from('media_items').select('*').eq('workspace_id',workspaceId).order('position'),
+      supabase.from('media_items').select('*').eq('workspace_id',workspaceId).neq('status','archived').order('position'),
       supabase.from('automation_rules').select('*').eq('workspace_id',workspaceId).order('created_at',{ascending:false}),
       supabase.from('system_components').select('*').eq('workspace_id',workspaceId).order('name'),
       supabase.from('workflows').select('*').eq('workspace_id',workspaceId).order('updated_at',{ascending:false})

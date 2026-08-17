@@ -8,7 +8,7 @@ import {
   More, Next, Notification, Pause as SaxPause, Play as SaxPlay,
   PlayCircle as SaxPlayCircle, Refresh, Refresh2, SearchNormal1, Send2,
   Setting2, ShieldTick, StopCircle, Sun1, Timer1, TickCircle, TickSquare as SaxTickSquare, Video,
-  VideoPlay as SaxVideoPlay, VolumeHigh, type Icon,
+  VideoPlay as SaxVideoPlay, VolumeHigh, VolumeSlash, type Icon,
 } from 'iconsax-react';
 
 /** Iconsax omits its paint attributes when color is undefined. */
@@ -68,6 +68,7 @@ export const CheckCircle=visible(TickCircle);
 export const Broadcast=visible(Video);
 export const VideoPlay=visible(SaxVideoPlay);
 export const SpeakerHigh=visible(VolumeHigh);
+export const SpeakerSlash=visible(VolumeSlash);
 export const CaretDown=visible(ArrowDown2);
 export const Eye=visible(SaxEye);
 export const EyeSlash=visible(SaxEyeSlash);
