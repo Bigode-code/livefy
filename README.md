@@ -13,6 +13,14 @@ npm run dev
 
 A aplicação será iniciada em `http://127.0.0.1:3000` quando a porta estiver disponível.
 
+Copie `.env.example` para `.env.local` e preencha somente a URL e a chave pública `publishable` do projeto Supabase. Tokens pessoais, chaves `service_role` e senhas nunca devem ser usados no frontend.
+
+## Banco e autenticação
+
+O schema versionado está em `supabase/migrations`. As tabelas operacionais começam vazias e são protegidas por Row Level Security (RLS); cada usuário acessa somente os workspaces aos quais pertence.
+
+O login, cadastro e recuperação de senha usam o Supabase Auth. Dados de produtos, sessões, eventos, comentários, mídia, automações, diagnósticos e workflows vêm exclusivamente da Supabase, sem fallback de demonstração.
+
 ## Verificações
 
 ```bash

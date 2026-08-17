@@ -4,7 +4,7 @@ import {
   ArrowRight2, ArrowRotateLeft, ArrowSwapVertical, Back, Box1, Calendar,
   Category2, Chart1, Chart2, CloseCircle, CloseSquare, Cloud as SaxCloud, Diagram,
   Apple as SaxApple, CodeCircle, DocumentText, Eye as SaxEye, EyeSlash as SaxEyeSlash, Filter, Global, Google as SaxGoogle, HambergerMenu, Health, Hierarchy3, I3Dcube,
-  LampOn, MagicStar, Menu, MessageText1, Messages1, Monitor, Moon as SaxMoon, Game, Card, Cpu, Link2, Layer,
+  LampOn, MagicStar, Menu, MessageText1, Messages1, Monitor, Moon as SaxMoon, Game, Card, Cpu, Link2, Layer, Logout as SaxLogout,
   More, Next, Notification, Pause as SaxPause, Play as SaxPlay,
   PlayCircle as SaxPlayCircle, Refresh, Refresh2, SearchNormal1, Send2,
   Setting2, ShieldTick, StopCircle, Sun1, Timer1, TickCircle, TickSquare as SaxTickSquare, Video,
@@ -80,3 +80,4 @@ export const CreditCard=visible(Card);
 export const Processor=visible(Cpu);
 export const Link=visible(Link2);
 export const Layers=visible(Layer);
+export const Logout=visible(SaxLogout);
