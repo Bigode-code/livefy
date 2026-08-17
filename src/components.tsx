@@ -1,0 +1,16 @@
+import type { ReactNode } from 'react';
+import { MagnifyingGlass, CaretDown, CheckCircle, Pulse } from './icons';
+import type { StatusTone } from './types';
+
+export function Status({label,tone='neutral'}:{label:string;tone?:StatusTone}) { return <span className={`status status-${tone}`}><i />{label}</span> }
+export function Button({children,kind='secondary',icon,disabled,onClick}:{children:ReactNode;kind?:'primary'|'secondary'|'danger'|'quiet';icon?:ReactNode;disabled?:boolean;onClick?:()=>void}) { return <button className={`button button-${kind}`} disabled={disabled} onClick={onClick}>{icon}{children}</button> }
+export function PageHeader({eyebrow,title,description,actions}:{eyebrow?:string;title:string;description?:string;actions?:ReactNode}) { return <header className="page-header"><div>{eyebrow&&<div className="eyebrow">{eyebrow}</div>}<h1>{title}</h1>{description&&<p>{description}</p>}</div>{actions&&<div className="header-actions">{actions}</div>}</header> }
+export function Section({title,meta,children,className=''}:{title?:string;meta?:ReactNode;children:ReactNode;className?:string}) { return <section className={`section ${className}`}>{title&&<div className="section-head"><h2>{title}</h2>{meta}</div>}{children}</section> }
+export function Metric({label,value,context}:{label:string;value:string;context:string}) { return <div className="metric"><span>{label}</span><strong>{value}</strong><small>{context}</small></div> }
+export function TextField({label,description,placeholder,value,error,disabled,readOnly,wide=false}:{label:string;description?:string;placeholder?:string;value?:string;error?:string;disabled?:boolean;readOnly?:boolean;wide?:boolean}) { return <label className={`field ${wide?'field-wide':''}`}><span>{label}</span><input aria-invalid={!!error} placeholder={placeholder} defaultValue={value} disabled={disabled} readOnly={readOnly}/>{description&&<small>{description}</small>}{error&&<em><Pulse variant="Bold"/> {error}</em>}</label> }
+export function SelectField({label,value}:{label:string;value:string}) { return <label className="field"><span>{label}</span><div className="select-wrap"><select defaultValue={value}><option>{value}</option><option>System</option><option>Light</option><option>Dark</option></select><CaretDown /></div></label> }
+export function Switch({label,description,on=true}:{label:string;description?:string;on?:boolean}) { return <label className="switch-row"><span><b>{label}</b>{description&&<small>{description}</small>}</span><input type="checkbox" defaultChecked={on}/><i aria-hidden="true" /></label> }
+export function Search({placeholder='Search'}:{placeholder?:string}) { return <label className="search"><MagnifyingGlass/><input aria-label={placeholder} placeholder={placeholder}/><kbd>⌘ K</kbd></label> }
+export function EmptyState(){return <div className="empty-state"><div className="empty-icon"><CheckCircle/></div><h3>Everything is clear</h3><p>New operational items will appear here as the session changes.</p></div>}
+export function Skeleton(){return <div className="skeletons" aria-label="Loading"><i/><i/><i/></div>}
+export function InlineLoader(){return <span className="inline-loader"><Pulse/> Synchronizing products</span>}
