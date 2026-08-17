@@ -40,7 +40,7 @@ export default function AuthSectionTwo({mode}:{mode:AuthMode}){
             <ImageTile src={images[3]} active={activeIndex===3} className="auth2-tile-small"/>
             <ImageTile src={images[2]} active={activeIndex===2} className="auth2-tile-wide"/>
           </div>
-          <div className="auth2-prompt"><p><b>/live</b> {prompts[activeIndex]}</p><button type="button" aria-label="Use current creative direction"><Icon.ArrowRight/></button></div>
+          <div className="auth2-prompt"><p><b>/live</b> {prompts[activeIndex]}</p><button type="button" aria-label="Show next creative direction" onClick={()=>setActiveIndex(current=>(current+1)%prompts.length)}><Icon.ArrowRight/></button></div>
           <p className="auth2-statement">A live workspace for creators and commerce teams</p>
           <div className="auth2-pagination">{prompts.map((_,index)=><button key={index} type="button" className={activeIndex===index?'active':''} onClick={()=>setActiveIndex(index)} aria-label={`Show prompt ${index+1}`}/>)}</div>
         </div>

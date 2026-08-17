@@ -14,7 +14,7 @@ export default function StudioOverview(){
     {id:'create',className:'creative',icon:Icon.Sparkle,kicker:'Generative',title:'Creation studio',description:'Build reusable visual workflows for video, images and live assets.',meta:`${workflows.length} ${t('workflows')}`,tone:'neutral',action:'Open creation studio'}
   ] as const;
   return <div className="page wide studio-home">
-    <PageHeader eyebrow="Studio" title="Choose how you want to create" description="One workspace for commerce lives, interactive games and AI-assisted production." actions={<Button kind="primary" icon={<Icon.Plus/>}>New production</Button>}/>
+    <PageHeader eyebrow="Studio" title="Choose how you want to create" description="One workspace for commerce lives, interactive games and AI-assisted production." actions={<Button kind="primary" icon={<Icon.Plus/>} onClick={()=>{location.hash='create'}}>New production</Button>}/>
     {error&&<div className="data-error" role="alert">{error}</div>}
     <div className="studio-mode-grid">{modes.map(({id,className,icon:ModeIcon,kicker,title,description,meta,tone,action},index)=><a className={`studio-mode studio-mode-${className} ${index===0?'studio-mode-featured':''}`} href={`#${id}`} key={id}>
       <div className="studio-mode-top"><span className="studio-mode-icon"><ModeIcon/></span><span className="studio-mode-kicker">{kicker}</span><Icon.ArrowRight/></div>
