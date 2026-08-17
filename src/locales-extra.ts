@@ -26,6 +26,17 @@ Object.assign(extraTranslations,{
   'Manage your workspace access, usage and future billing preferences.':['Zugriff, Nutzung und künftige Abrechnung verwalten.','Управляйте доступом, использованием и будущими настройками оплаты.'],'Change plan':['Tarif wechseln','Сменить план'],'Current access':['Aktueller Zugriff','Текущий доступ'],'Early workspace':['Früher Arbeitsbereich','Ранний доступ'],'Plan names and pricing will be configured later.':['Tarifnamen und Preise werden später konfiguriert.','Названия и цены планов будут настроены позже.'],'Current usage':['Aktuelle Nutzung','Текущее использование'],'Live production':['Live-Produktion','Производство эфиров'],'AI generation':['KI-Generierung','Генерация ИИ'],'Workspace members':['Mitglieder','Участники пространства'],'Billing details':['Abrechnungsdaten','Платёжные данные'],'No payment method required':['Keine Zahlungsmethode erforderlich','Способ оплаты не требуется'],'Billing details can be added when plans are published.':['Abrechnungsdaten können nach Veröffentlichung der Tarife ergänzt werden.','Платёжные данные можно добавить после публикации планов.'],'Add payment method':['Zahlungsmethode hinzufügen','Добавить способ оплаты'],'Plan management':['Tarifverwaltung','Управление планом'],'Plans coming soon':['Tarife folgen bald','Планы скоро появятся'],'This area is ready for tiers, limits and regional pricing.':['Dieser Bereich ist für Stufen, Limits und regionale Preise vorbereitet.','Раздел готов для уровней, лимитов и региональных цен.']
 });
 
+Object.assign(extraTranslations,{
+  'Sign out':['Abmelden','Выйти'],
+  'products':['Produkte','товаров'],
+  'workflows':['Workflows','процессов'],
+  'No productions yet':['Noch keine Produktionen','Производств пока нет'],
+  'Create a live session or workflow to see it here.':['Erstellen Sie eine Live-Sitzung oder einen Workflow, um ihn hier zu sehen.','Создайте эфир или рабочий процесс, чтобы увидеть его здесь.'],
+  'Workspace data':['Arbeitsbereichsdaten','Данные рабочего пространства'],
+  'Stored in Supabase':['In Supabase gespeichert','Хранится в Supabase'],
+  'Connected systems':['Verbundene Systeme','Подключённые системы']
+});
+
 Object.assign(extraTranslations,{'Launch video workflow':['Launch-Video','Видео запуска']});
 
 Object.assign(extraTranslations,{

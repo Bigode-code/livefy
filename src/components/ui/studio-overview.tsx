@@ -2,14 +2,16 @@ import type { ReactNode } from 'react';
 import * as Icon from '../../icons';
 import { Button, PageHeader, Section, Skeleton, Status } from '../../components';
 import { useLivefyData } from '../../livefy-data';
+import { useI18n } from '../../i18n';
 
 export default function StudioOverview(){
   const{loading,error,sessions,workflows,products,comments,systems}=useLivefyData();
+  const{t}=useI18n();
   const live=sessions.find(session=>session.status==='live');
   const modes=[
-    {id:'live',className:'commerce',icon:Icon.Broadcast,kicker:'Commerce',title:'TikTok Shop LIVE',description:'Products, pinned offers, comments and conversion automation in one control room.',meta:live?.mode==='shop'?'Live now':`${products.length} products`,tone:live?.mode==='shop'?'online':'neutral',action:'Open Shop LIVE'},
+    {id:'live',className:'commerce',icon:Icon.Broadcast,kicker:'Commerce',title:'TikTok Shop LIVE',description:'Products, pinned offers, comments and conversion automation in one control room.',meta:live?.mode==='shop'?'Live now':`${products.length} ${t('products')}`,tone:live?.mode==='shop'?'online':'neutral',action:'Open Shop LIVE'},
     {id:'games',className:'games',icon:Icon.GameController,kicker:'Interactive',title:'Game LIVE',description:'Turn gifts, likes and chat messages into safe events inside the game.',meta:sessions.some(session=>session.mode==='game')?'Configured':'Not configured',tone:'neutral',action:'Configure game LIVE'},
-    {id:'create',className:'creative',icon:Icon.Sparkle,kicker:'Generative',title:'Creation studio',description:'Build reusable visual workflows for video, images and live assets.',meta:`${workflows.length} workflows`,tone:'neutral',action:'Open creation studio'}
+    {id:'create',className:'creative',icon:Icon.Sparkle,kicker:'Generative',title:'Creation studio',description:'Build reusable visual workflows for video, images and live assets.',meta:`${workflows.length} ${t('workflows')}`,tone:'neutral',action:'Open creation studio'}
   ] as const;
   return <div className="page wide studio-home">
     <PageHeader eyebrow="Studio" title="Choose how you want to create" description="One workspace for commerce lives, interactive games and AI-assisted production." actions={<Button kind="primary" icon={<Icon.Plus/>}>New production</Button>}/>
