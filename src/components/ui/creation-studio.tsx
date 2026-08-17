@@ -1,73 +1,101 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-  addEdge, Background, BackgroundVariant, Controls, Handle, MiniMap, Position,
-  ReactFlow, useEdgesState, useNodesState, type Connection, type Edge, type Node, type NodeProps
-} from '@xyflow/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { addEdge, Background, BackgroundVariant, Controls, Handle, MiniMap, Position, ReactFlow, useEdgesState, useNodesState, type Connection, type Edge, type Node, type NodeProps, type ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import * as Icon from '../../icons';
 import { Button, Status } from '../../components';
 import { useLivefyData } from '../../livefy-data';
 import { supabase } from '../../lib/supabase';
+import { defaultsFor, serializeVideoInput, videoModels, videoProviders, type VideoField, type VideoModel } from '../../video-models';
 
-type StudioNodeData={label:string;kind:'prompt'|'model'|'output';model?:string;description:string;status?:string;accent:'text'|'video'|'model'|'output'};
+type StudioNodeData={label:string;kind:'prompt'|'model'|'output';model?:string;description:string;status?:string;accent:'text'|'video'|'model'|'output';config?:Record<string,unknown>;taskId?:string;outputUrl?:string;error?:string};
 type StudioNode=Node<StudioNodeData,'studio'>;
+type ContextMenu={left:number;top:number;flowX:number;flowY:number}|null;
 
 const initialNodes:StudioNode[]=[];
 const initialEdges:Edge[]=[];
-
-function NodeIcon({accent}:{accent:StudioNodeData['accent']}){return <span className={`creation-node-icon creation-node-icon-${accent}`}>{accent==='text'?<Icon.ChatCenteredText/>:accent==='output'?<Icon.PlayCircle/>:accent==='video'?<Icon.VideoPlay/>:<Icon.Sparkle/>}</span>}
-
-function StudioNodeCard({data,selected}:NodeProps<StudioNode>){return <div className={`creation-node creation-node-${data.kind} ${selected?'is-selected':''}`}>
-  {data.kind!=='prompt'&&<Handle type="target" position={Position.Left}/>}<Handle type="source" position={Position.Right}/>
-  <header><NodeIcon accent={data.accent}/><div><small>{data.model??(data.kind==='prompt'?'Text prompt':'Output')}</small><b>{data.label}</b></div><button aria-label="Node options"><Icon.DotsThree/></button></header>
-  {data.kind==='prompt'&&<p>{data.description}</p>}
-  {data.kind==='model'&&<><div className="creation-model-input"><span>Input</span><b>{data.description}</b></div><footer><Status label={data.status!} tone="warning"/><button aria-label={`Run ${data.label}`}><Icon.Play/></button></footer></>}
-  {data.kind==='output'&&<><div className="creation-output-preview"><Icon.PlayCircle/><span>Generated media appears here</span></div><footer><span>{data.status}</span></footer></>}
- </div>}
-
-const libraryItems=[
+const essentials=[
   {label:'Prompt',description:'Write or combine text',accent:'text' as const,kind:'prompt' as const},
   {label:'Import media',description:'Image, video or audio',accent:'output' as const,kind:'prompt' as const},
-  {label:'Seedance 2.5',description:'Text and image to video',accent:'video' as const,kind:'model' as const},
-  {label:'Kling Omni',description:'Multimodal generation',accent:'model' as const,kind:'model' as const},
   {label:'Preview',description:'Inspect generated media',accent:'output' as const,kind:'output' as const}
 ];
-const templates=[['Product motion','Prompt → Seedance → Output'],['Dual model compare','Prompt → 2 models → Compare'],['Live scene pack','Reference → Kling → 3 outputs']];
+const templates=[['Product motion','Prompt → video model → Output'],['Model comparison','Prompt → 2 video models → Compare'],['Live scene pack','Reference → video model → 3 outputs']];
+
+function NodeIcon({accent}:{accent:StudioNodeData['accent']}){return <span className={`creation-node-icon creation-node-icon-${accent}`}>{accent==='text'?<Icon.ChatCenteredText/>:accent==='output'?<Icon.PlayCircle/>:<Icon.VideoPlay/>}</span>}
+
+function StudioNodeCard({data,selected}:NodeProps<StudioNode>){
+  const tone=data.status==='Completed'?'online':data.error?'error':data.status==='Processing'?'warning':'neutral';
+  return <div className={`creation-node creation-node-${data.kind} ${selected?'is-selected':''}`}>
+    {data.kind!=='prompt'&&<Handle type="target" position={Position.Left}/>}<Handle type="source" position={Position.Right}/>
+    <header><NodeIcon accent={data.accent}/><div><small>{data.model??(data.kind==='prompt'?'Text prompt':'Output')}</small><b>{data.label}</b></div><button aria-label="Node options"><Icon.DotsThree/></button></header>
+    {data.kind==='prompt'&&<p>{data.description}</p>}
+    {data.kind==='model'&&<><div className="creation-model-input"><span>Input</span><b>{data.description}</b></div><footer><Status label={data.error?'Error':data.status||'Ready to configure'} tone={tone}/><button aria-label={`Configure ${data.label}`}><Icon.CaretRight/></button></footer></>}
+    {data.kind==='output'&&<><div className="creation-output-preview">{data.outputUrl?<video src={data.outputUrl} muted controls/>:<><Icon.PlayCircle/><span>Generated media appears here</span></>}</div><footer><span>{data.status}</span></footer></>}
+  </div>
+}
+
+function Field({field,value,onChange}:{field:VideoField;value:unknown;onChange:(value:unknown)=>void}){
+  const id=`video-field-${field.key}`;
+  if(field.type==='toggle')return <label className="creation-property creation-property-toggle" htmlFor={id}><span><b>{field.label}</b>{field.helper&&<small>{field.helper}</small>}</span><input id={id} type="checkbox" checked={Boolean(value)} onChange={event=>onChange(event.target.checked)}/><i/></label>;
+  if(field.type==='select')return <label className="creation-property" htmlFor={id}><span>{field.label}{field.required?' *':''}</span><select id={id} value={String(value??field.defaultValue??'')} onChange={event=>onChange(field.options?.find(option=>String(option.value)===event.target.value)?.value??event.target.value)}>{field.options?.map(option=><option key={String(option.value)} value={String(option.value)}>{option.label}</option>)}</select>{field.helper&&<small>{field.helper}</small>}</label>;
+  if(field.type==='textarea'||field.type==='json')return <label className="creation-property" htmlFor={id}><span>{field.label}{field.required?' *':''}</span><textarea id={id} value={String(value??'')} placeholder={field.placeholder} onChange={event=>onChange(event.target.value)}/>{field.helper&&<small>{field.helper}</small>}</label>;
+  return <label className="creation-property" htmlFor={id}><span>{field.label}{field.required?' *':''}</span><input id={id} type={field.type==='number'?'number':field.type==='url'?'url':'text'} min={field.min} max={field.max} value={String(value??'')} placeholder={field.placeholder} onChange={event=>onChange(field.type==='number'&&event.target.value!==''?Number(event.target.value):event.target.value)}/>{field.helper&&<small>{field.helper}</small>}</label>
+}
 
 export default function CreationStudio(){
- const{workspace,workflows,refresh}=useLivefyData();
- const desktopInitial=()=>typeof window==='undefined'||window.innerWidth>820;
- const compactCanvas=typeof window!=='undefined'&&window.innerWidth<=820;
- const[nodes,setNodes,onNodesChange]=useNodesState<StudioNode>(initialNodes);
- const[edges,setEdges,onEdgesChange]=useEdgesState(initialEdges);
- const[selectedId,setSelectedId]=useState('');
- const[workflowName,setWorkflowName]=useState('Untitled workflow');
- const[activeLibrary,setActiveLibrary]=useState<'nodes'|'templates'|'saved'>('nodes');
- const[libraryOpen,setLibraryOpen]=useState(desktopInitial);
- const[inspectorOpen,setInspectorOpen]=useState(false);
- const[saving,setSaving]=useState(false);
- const nodeTypes=useMemo(()=>({studio:StudioNodeCard}),[]);
- const selectedNode=nodes.find(node=>node.id===selectedId)??nodes[0];
- const onConnect=useCallback((connection:Connection)=>setEdges(current=>addEdge({...connection,type:'smoothstep'},current)),[setEdges]);
- const addNode=(item:(typeof libraryItems)[number])=>{const id=`${item.label.toLowerCase().replace(/\s/g,'-')}-${nodes.length}`;setNodes(current=>[...current,{id,type:'studio',position:{x:310+current.length*35,y:130+current.length*28},data:{label:item.label,kind:item.kind,description:item.description,status:item.kind==='model'?'API not connected':undefined,accent:item.accent}}]);setSelectedId(id);setInspectorOpen(true)};
- const saveWorkflow=async()=>{if(!workspace)return;setSaving(true);await supabase.from('workflows').insert({workspace_id:workspace.id,name:workflowName.trim()||'Untitled workflow',nodes,edges,status:'draft'});await refresh();setSaving(false)};
- return <div className="creation-workspace">
-  <header className="creation-topbar"><div className="creation-file"><a href="#overview">Creation studio</a><Icon.CaretRight/><input aria-label="Workflow name" value={workflowName} onChange={event=>setWorkflowName(event.target.value)}/><Status label={nodes.length?'Draft':'Empty'} tone="neutral"/></div><nav aria-label="Creation views"><button className="active">Flow</button><button>Tool</button><button>Runs</button></nav><div className="creation-actions"><button className="creation-icon-button" aria-label="Undo"><Icon.ArrowUUpLeft/></button><button className="creation-icon-button" aria-label="Redo"><Icon.ArrowRight/></button><Button onClick={()=>void saveWorkflow()} disabled={saving||!workspace}>{saving?'Saving…':'Save'}</Button><Button kind="primary" icon={<Icon.Play/>} disabled>Connect model to run</Button></div></header>
-  <div className={`creation-body ${libraryOpen?'with-library':''} ${inspectorOpen?'with-inspector':''}`}>
-   <aside className="creation-rail" aria-label="Creation tools"><button className={libraryOpen?'active':''} onClick={()=>setLibraryOpen(value=>!value)} aria-label="Toggle node library"><Icon.Plus/></button><button aria-label="Assets"><Icon.PlayCircle/></button><button aria-label="Saved"><Icon.Layers/></button><span/><button aria-label="Creation settings"><Icon.GearSix/></button></aside>
-   {libraryOpen&&<aside className="creation-library"><header><div><b>Add to canvas</b><span>Drag or click an item</span></div><button aria-label="Close library" onClick={()=>setLibraryOpen(false)}><Icon.X/></button></header><label className="creation-library-search"><Icon.MagnifyingGlass/><input placeholder="Search models and tools"/><kbd>Tab</kbd></label><div className="creation-library-tabs"><button className={activeLibrary==='nodes'?'active':''} onClick={()=>setActiveLibrary('nodes')}>Nodes</button><button className={activeLibrary==='templates'?'active':''} onClick={()=>setActiveLibrary('templates')}>Templates</button><button className={activeLibrary==='saved'?'active':''} onClick={()=>setActiveLibrary('saved')}>Saved</button></div>
-    {activeLibrary==='nodes'&&<div className="creation-library-content"><small>ESSENTIALS</small>{libraryItems.slice(0,2).map(item=><button key={item.label} onClick={()=>addNode(item)}><NodeIcon accent={item.accent}/><div><b>{item.label}</b><span>{item.description}</span></div><Icon.Plus/></button>)}<small>VIDEO MODELS</small>{libraryItems.slice(2,4).map(item=><button key={item.label} onClick={()=>addNode(item)}><NodeIcon accent={item.accent}/><div><b>{item.label}</b><span>{item.description}</span></div><Icon.Plus/></button>)}<small>OUTPUT</small>{libraryItems.slice(4).map(item=><button key={item.label} onClick={()=>addNode(item)}><NodeIcon accent={item.accent}/><div><b>{item.label}</b><span>{item.description}</span></div><Icon.Plus/></button>)}</div>}
-    {activeLibrary==='templates'&&<div className="creation-template-list">{templates.map((template,index)=><button key={template[0]}><span className={`template-preview template-preview-${index+1}`}><i/><i/><i/></span><b>{template[0]}</b><small>{template[1]}</small></button>)}</div>}
-    {activeLibrary==='saved'&&(workflows.length?<div className="creation-template-list">{workflows.map(workflow=><button key={workflow.id} onClick={()=>{setWorkflowName(workflow.name);setNodes(workflow.nodes as StudioNode[]);setEdges(workflow.edges as Edge[]);setSelectedId('');setInspectorOpen(false)}}><span className="template-preview"><i/><i/><i/></span><b>{workflow.name}</b><small>{workflow.status}</small></button>)}</div>:<div className="creation-saved-empty"><Icon.Layers/><b>No saved workflows</b><p>Save this canvas to persist it in Supabase.</p></div>)}
-   </aside>}
-   <section className="creation-canvas" aria-label="Visual creation workflow"><ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onNodeClick={(_,node)=>{setSelectedId(node.id);setInspectorOpen(true)}} fitView fitViewOptions={{padding:compactCanvas?.08:.22,minZoom:compactCanvas?.55:.35}} minZoom={compactCanvas?.55:.35} maxZoom={1.8} defaultEdgeOptions={{style:{stroke:'#a4a7ad',strokeWidth:1.5}}} colorMode="light" deleteKeyCode={['Backspace','Delete']}>
-     <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d7d9de"/><Controls showInteractive={false}/><MiniMap pannable zoomable nodeStrokeWidth={2}/>
-     <div className="creation-canvas-head"><button onClick={()=>setLibraryOpen(true)}><Icon.Plus/><span>Add node</span><kbd>Tab</kbd></button><button><Icon.MagnifyingGlass/><span>Find on canvas</span></button></div>
-     <div className="creation-canvas-tools"><button className="active" aria-label="Select"><Icon.CaretUpDown/></button><button aria-label="Add prompt" onClick={()=>addNode(libraryItems[0])}><Icon.ChatCenteredText/></button><button aria-label="Import media"><Icon.PlayCircle/></button><button aria-label="Add note"><Icon.ListMagnifyingGlass/></button><i/><button aria-label="Auto arrange"><Icon.SquaresFour/></button></div>
-    </ReactFlow></section>
-   {inspectorOpen&&selectedNode&&<aside className="creation-inspector"><header><div><small>SELECTED NODE</small><b>Properties</b></div><button aria-label="Close properties" onClick={()=>setInspectorOpen(false)}><Icon.X/></button></header><div className="creation-inspector-node"><NodeIcon accent={selectedNode.data.accent}/><div><small>{selectedNode.data.model??selectedNode.data.kind}</small><h2>{selectedNode.data.label}</h2></div></div><p>{selectedNode.data.description}</p>
-    {selectedNode.data.kind==='prompt'?<label className="creation-property"><span>Prompt</span><textarea defaultValue={selectedNode.data.description}/><small>Connected models receive this text.</small></label>:selectedNode.data.kind==='output'?<div className="creation-property-empty"><Icon.PlayCircle/><b>No media generated</b><span>Run a connected model to create a preview.</span></div>:<><label className="creation-property"><span>API connection</span><button className="creation-connection"><Icon.Link/><b>Not configured</b><Icon.CaretRight/></button><small>Credentials are stored securely.</small></label><div className="creation-property-grid"><label><span>Aspect ratio</span><select defaultValue="9:16"><option>9:16</option><option>16:9</option><option>1:1</option></select></label><label><span>Duration</span><select defaultValue="5 sec"><option>5 sec</option><option>10 sec</option></select></label></div><label className="creation-property"><span>Output quality</span><select defaultValue="1080p"><option>1080p</option><option>720p</option></select></label><div className="creation-api-note"><Icon.ShieldCheck/><p><b>Provider access required</b><br/>Connect your API before running this node.</p></div></>}
-   </aside>}
+  const{workspace,workflows,refresh}=useLivefyData();
+  const desktopInitial=()=>typeof window==='undefined'||window.innerWidth>820;
+  const compactCanvas=typeof window!=='undefined'&&window.innerWidth<=820;
+  const[nodes,setNodes,onNodesChange]=useNodesState<StudioNode>(initialNodes);
+  const[edges,setEdges,onEdgesChange]=useEdgesState(initialEdges);
+  const[selectedId,setSelectedId]=useState('');
+  const[workflowName,setWorkflowName]=useState('Untitled workflow');
+  const[activeLibrary,setActiveLibrary]=useState<'nodes'|'templates'|'saved'>('nodes');
+  const[libraryOpen,setLibraryOpen]=useState(desktopInitial);
+  const[inspectorOpen,setInspectorOpen]=useState(false);
+  const[saving,setSaving]=useState(false);
+  const[running,setRunning]=useState(false);
+  const[menu,setMenu]=useState<ContextMenu>(null);
+  const[modelSearch,setModelSearch]=useState('');
+  const[provider,setProvider]=useState('All');
+  const[flow,setFlow]=useState<ReactFlowInstance<StudioNode,Edge>|null>(null);
+  const canvasRef=useRef<HTMLElement|null>(null);
+  const polling=useRef<number[]>([]);
+  const nodeTypes=useMemo(()=>({studio:StudioNodeCard}),[]);
+  const selectedNode=nodes.find(node=>node.id===selectedId)??nodes[0];
+  const selectedModel=selectedNode?.data.model?videoModels.find(model=>model.id===selectedNode.data.model):undefined;
+  const filteredModels=useMemo(()=>videoModels.filter(model=>(provider==='All'||model.provider===provider)&&`${model.name} ${model.provider} ${model.description}`.toLowerCase().includes(modelSearch.toLowerCase())),[modelSearch,provider]);
+
+  useEffect(()=>()=>polling.current.forEach(window.clearTimeout),[]);
+  useEffect(()=>{const close=()=>setMenu(null);window.addEventListener('click',close);window.addEventListener('blur',close);return()=>{window.removeEventListener('click',close);window.removeEventListener('blur',close)}},[]);
+
+  const onConnect=useCallback((connection:Connection)=>setEdges(current=>addEdge({...connection,type:'smoothstep'},current)),[setEdges]);
+  const updateNode=useCallback((id:string,patch:Partial<StudioNodeData>)=>setNodes(current=>current.map(node=>node.id===id?{...node,data:{...node.data,...patch}}:node)),[setNodes]);
+  const addEssential=(item:(typeof essentials)[number])=>{const id=`${item.label.toLowerCase().replace(/\s/g,'-')}-${crypto.randomUUID()}`;setNodes(current=>[...current,{id,type:'studio',position:{x:310+current.length*35,y:130+current.length*28},data:{...item,status:item.kind==='output'?'Waiting for a generation':undefined}}]);setSelectedId(id);setInspectorOpen(true)};
+  const addVideoModel=(model:VideoModel,position?:{x:number;y:number})=>{const id=`video-${crypto.randomUUID()}`;setNodes(current=>[...current,{id,type:'studio',position:position??{x:300+current.length*30,y:120+current.length*24},data:{label:model.name,kind:'model',model:model.id,description:model.inputLabel,status:'Ready to configure',accent:'video',config:defaultsFor(model)}}]);setSelectedId(id);setInspectorOpen(true);setMenu(null)};
+  const saveWorkflow=async()=>{if(!workspace)return;setSaving(true);await supabase.from('workflows').insert({workspace_id:workspace.id,name:workflowName.trim()||'Untitled workflow',nodes,edges,status:'draft'});await refresh();setSaving(false)};
+
+  const requestTask=useCallback(async(path:string,options?:RequestInit)=>{const{data}=await supabase.auth.getSession();if(!data.session)throw new Error('Your session expired. Sign in again.');const response=await fetch(path,{...options,headers:{Authorization:`Bearer ${data.session.access_token}`,'Content-Type':'application/json',...(options?.headers||{})}});const payload=await response.json().catch(()=>({error:'Invalid server response.'}));if(!response.ok||payload.success===false)throw new Error(payload.error||payload?.data?.message||'Video request failed.');return payload},[]);
+  const pollTask=useCallback(async(nodeId:string,taskId:string,attempt=0)=>{try{const payload=await requestTask(`/api/unifically?action=task&taskId=${encodeURIComponent(taskId)}`);const task=payload.data??payload;const status=String(task.status||'processing').toLowerCase();const outputUrl=task.output?.video_url||task.video_url||task.data?.video_url;if(status==='completed')updateNode(nodeId,{status:'Completed',outputUrl,error:undefined});else if(status==='failed')updateNode(nodeId,{status:'Failed',error:task.error_message||'Generation failed.'});else if(attempt<150){updateNode(nodeId,{status:'Processing'});polling.current.push(window.setTimeout(()=>void pollTask(nodeId,taskId,attempt+1),4000))}}catch(error){updateNode(nodeId,{status:'Failed',error:error instanceof Error?error.message:'Could not check task.'})}},[requestTask,updateNode]);
+  const runSelected=async()=>{if(!selectedNode||!selectedModel)return;setRunning(true);updateNode(selectedNode.id,{status:'Submitting',error:undefined});try{const input=serializeVideoInput(selectedModel,selectedNode.data.config??{});const payload=await requestTask('/api/unifically',{method:'POST',body:JSON.stringify({model:selectedModel.id,input})});const taskId=payload.data?.task_id;if(!taskId)throw new Error('Provider did not return a task ID.');updateNode(selectedNode.id,{taskId,status:'Processing'});void pollTask(selectedNode.id,taskId)}catch(error){updateNode(selectedNode.id,{status:'Failed',error:error instanceof Error?error.message:'Could not start generation.'})}finally{setRunning(false)}};
+
+  return <div className="creation-workspace">
+    <header className="creation-topbar"><div className="creation-file"><a href="#overview">Creation studio</a><Icon.CaretRight/><input aria-label="Workflow name" value={workflowName} onChange={event=>setWorkflowName(event.target.value)}/><Status label={nodes.length?'Draft':'Empty'} tone="neutral"/></div><nav aria-label="Creation views"><button className="active">Flow</button><button>Tool</button><button>Runs</button></nav><div className="creation-actions"><button className="creation-icon-button" aria-label="Undo"><Icon.ArrowUUpLeft/></button><button className="creation-icon-button" aria-label="Redo"><Icon.ArrowRight/></button><Button onClick={()=>void saveWorkflow()} disabled={saving||!workspace}>{saving?'Saving…':'Save'}</Button><Button kind="primary" icon={<Icon.Play/>} disabled={!selectedModel||running} onClick={()=>void runSelected()}>{running?'Submitting…':'Generate video'}</Button></div></header>
+    <div className={`creation-body ${libraryOpen?'with-library':''} ${inspectorOpen?'with-inspector':''}`}>
+      <aside className="creation-rail" aria-label="Creation tools"><button className={libraryOpen?'active':''} onClick={()=>setLibraryOpen(value=>!value)} aria-label="Toggle node library"><Icon.Plus/></button><button aria-label="Assets"><Icon.PlayCircle/></button><button aria-label="Saved"><Icon.Layers/></button><span/><button aria-label="Creation settings"><Icon.GearSix/></button></aside>
+      {libraryOpen&&<aside className="creation-library"><header><div><b>Add to canvas</b><span>Right-click the canvas for video AIs</span></div><button aria-label="Close library" onClick={()=>setLibraryOpen(false)}><Icon.X/></button></header><label className="creation-library-search"><Icon.MagnifyingGlass/><input value={modelSearch} onChange={event=>setModelSearch(event.target.value)} placeholder="Search video models"/><kbd>Tab</kbd></label><div className="creation-library-tabs"><button className={activeLibrary==='nodes'?'active':''} onClick={()=>setActiveLibrary('nodes')}>Nodes</button><button className={activeLibrary==='templates'?'active':''} onClick={()=>setActiveLibrary('templates')}>Templates</button><button className={activeLibrary==='saved'?'active':''} onClick={()=>setActiveLibrary('saved')}>Saved</button></div>
+        {activeLibrary==='nodes'&&<div className="creation-library-content"><small>ESSENTIALS</small>{essentials.map(item=><button key={item.label} onClick={()=>addEssential(item)}><NodeIcon accent={item.accent}/><div><b>{item.label}</b><span>{item.description}</span></div><Icon.Plus/></button>)}<small>VIDEO AIS · {filteredModels.length}</small>{filteredModels.slice(0,12).map(model=><button key={model.id} onClick={()=>addVideoModel(model)}><NodeIcon accent="video"/><div><b>{model.name}</b><span>{model.provider} · {model.inputLabel}</span></div><Icon.Plus/></button>)}</div>}
+        {activeLibrary==='templates'&&<div className="creation-template-list">{templates.map((template,index)=><button key={template[0]}><span className={`template-preview template-preview-${index+1}`}><i/><i/><i/></span><b>{template[0]}</b><small>{template[1]}</small></button>)}</div>}
+        {activeLibrary==='saved'&&(workflows.length?<div className="creation-template-list">{workflows.map(workflow=><button key={workflow.id} onClick={()=>{setWorkflowName(workflow.name);setNodes(workflow.nodes as StudioNode[]);setEdges(workflow.edges as Edge[]);setSelectedId('');setInspectorOpen(false)}}><span className="template-preview"><i/><i/><i/></span><b>{workflow.name}</b><small>{workflow.status}</small></button>)}</div>:<div className="creation-saved-empty"><Icon.Layers/><b>No saved workflows</b><p>Save this canvas to persist it in Supabase.</p></div>)}
+      </aside>}
+      <section ref={canvasRef} className="creation-canvas" aria-label="Visual creation workflow"><ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} onInit={setFlow} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onNodeClick={(_,node)=>{setSelectedId(node.id);setInspectorOpen(true);setMenu(null)}} onPaneClick={()=>setMenu(null)} onPaneContextMenu={event=>{event.preventDefault();if(!flow||!canvasRef.current)return;const rect=canvasRef.current.getBoundingClientRect();const point=flow.screenToFlowPosition({x:event.clientX,y:event.clientY});setMenu({left:Math.max(8,Math.min(event.clientX-rect.left,rect.width-340)),top:Math.max(8,Math.min(event.clientY-rect.top,rect.height-430)),flowX:point.x,flowY:point.y})}} fitView fitViewOptions={{padding:compactCanvas?.08:.22,minZoom:compactCanvas?.55:.35}} minZoom={compactCanvas?.55:.35} maxZoom={1.8} defaultEdgeOptions={{style:{stroke:'#a4a7ad',strokeWidth:1.5}}} colorMode="light" deleteKeyCode={['Backspace','Delete']}>
+        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d7d9de"/><Controls showInteractive={false}/><MiniMap pannable zoomable nodeStrokeWidth={2}/>
+        <div className="creation-canvas-head"><button onClick={()=>setLibraryOpen(true)}><Icon.Plus/><span>Add node</span><kbd>Tab</kbd></button><span>Right-click anywhere to add a video AI</span></div>
+        <div className="creation-canvas-tools"><button className="active" aria-label="Select"><Icon.CaretUpDown/></button><button aria-label="Add prompt" onClick={()=>addEssential(essentials[0])}><Icon.ChatCenteredText/></button><button aria-label="Import media" onClick={()=>addEssential(essentials[1])}><Icon.PlayCircle/></button><button aria-label="Add note"><Icon.ListMagnifyingGlass/></button><i/><button aria-label="Auto arrange"><Icon.SquaresFour/></button></div>
+        {menu&&<div className="video-context-menu" role="menu" style={{left:menu.left,top:menu.top}} onClick={event=>event.stopPropagation()}><header><div><b>Video AI</b><span>{videoModels.length} models with native inputs</span></div><button aria-label="Close video AI menu" onClick={()=>setMenu(null)}><Icon.X/></button></header><label><Icon.MagnifyingGlass/><input autoFocus value={modelSearch} onChange={event=>setModelSearch(event.target.value)} placeholder="Search model or provider"/></label><nav>{['All',...videoProviders].map(name=><button key={name} className={provider===name?'active':''} onClick={()=>setProvider(name)}>{name}</button>)}</nav><div>{filteredModels.length?filteredModels.map(model=><button role="menuitem" key={model.id} onClick={()=>addVideoModel(model,{x:menu.flowX,y:menu.flowY})}><NodeIcon accent="video"/><span><b>{model.name}</b><small>{model.provider} · {model.inputLabel}</small></span><Icon.Plus/></button>):<p>No matching video model.</p>}</div></div>}
+      </ReactFlow></section>
+      {inspectorOpen&&selectedNode&&<aside className="creation-inspector"><header><div><small>SELECTED NODE</small><b>Properties</b></div><button aria-label="Close properties" onClick={()=>setInspectorOpen(false)}><Icon.X/></button></header><div className="creation-inspector-node"><NodeIcon accent={selectedNode.data.accent}/><div><small>{selectedNode.data.model??selectedNode.data.kind}</small><h2>{selectedNode.data.label}</h2></div></div><p>{selectedNode.data.description}</p>
+        {selectedNode.data.kind==='prompt'?<label className="creation-property"><span>Prompt</span><textarea value={selectedNode.data.description} onChange={event=>updateNode(selectedNode.id,{description:event.target.value})}/><small>Connected models receive this text.</small></label>:selectedNode.data.kind==='output'?<div className="creation-property-empty"><Icon.PlayCircle/><b>No media generated</b><span>Run a connected model to create a preview.</span></div>:selectedModel?<><div className="creation-provider-state"><Icon.Link/><div><b>Unifically</b><span>Server-side unified video API</span></div><Status label={selectedNode.data.status||'Ready'} tone={selectedNode.data.error?'error':selectedNode.data.status==='Completed'?'online':'neutral'}/></div>{selectedModel.fields.map(field=><Field key={field.key} field={field} value={selectedNode.data.config?.[field.key]??field.defaultValue} onChange={value=>updateNode(selectedNode.id,{config:{...(selectedNode.data.config??{}),[field.key]:value}})}/>)}{selectedNode.data.error&&<div className="creation-api-note creation-api-error"><Icon.ShieldCheck/><p><b>Generation could not start</b><br/>{selectedNode.data.error}</p></div>}{selectedNode.data.taskId&&<div className="creation-task-id"><span>Task ID</span><code>{selectedNode.data.taskId}</code></div>}<div className="creation-inspector-action"><Button kind="primary" icon={<Icon.Play/>} disabled={running} onClick={()=>void runSelected()}>{running?'Submitting…':'Generate video'}</Button><small>The API key remains on the server.</small></div></>:<div className="creation-api-note"><Icon.ShieldCheck/><p><b>Unknown saved model</b><br/>Add a current model from the canvas menu.</p></div>}
+      </aside>}
+    </div>
   </div>
- </div>
 }

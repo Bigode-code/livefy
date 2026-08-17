@@ -276,6 +276,33 @@ Object.assign(entries,{
   'Connected systems':['Sistemas conectados','Sistemas conectados','已连接系统']
 });
 
+Object.assign(entries,{
+  'Generate video':['Gerar vídeo','Generar vídeo','生成视频'],
+  'Submitting…':['Enviando…','Enviando…','提交中…'],
+  'Right-click the canvas for video AIs':['Clique com o botão direito no canvas para ver as IAs de vídeo','Haz clic derecho en el lienzo para ver las IA de vídeo','右键单击画布查看视频 AI'],
+  'Right-click anywhere to add a video AI':['Clique com o botão direito para adicionar uma IA de vídeo','Haz clic derecho para añadir una IA de vídeo','右键单击任意位置添加视频 AI'],
+  'Search video models':['Pesquisar modelos de vídeo','Buscar modelos de vídeo','搜索视频模型'],
+  'Video AI':['IA de vídeo','IA de vídeo','视频 AI'],
+  'models with native inputs':['modelos com entradas específicas','modelos con entradas específicas','个具有原生输入的模型'],
+  'Search model or provider':['Pesquisar modelo ou provedor','Buscar modelo o proveedor','搜索模型或提供商'],
+  'All':['Todos','Todos','全部'],
+  'No matching video model.':['Nenhum modelo de vídeo encontrado.','No se encontró ningún modelo de vídeo.','未找到匹配的视频模型。'],
+  'Ready to configure':['Pronto para configurar','Listo para configurar','可配置'],
+  'Server-side unified video API':['API unificada de vídeo no servidor','API unificada de vídeo en el servidor','服务端统一视频 API'],
+  'The API key remains on the server.':['A chave da API permanece no servidor.','La clave de API permanece en el servidor.','API 密钥保留在服务器端。'],
+  'Start frame URL':['URL do quadro inicial','URL del fotograma inicial','起始帧 URL'],
+  'End frame URL':['URL do quadro final','URL del fotograma final','结束帧 URL'],
+  'Omni-reference URLs':['URLs de referências multimodais','URLs de referencias multimodales','全模态参考 URL'],
+  'Reference image URLs':['URLs das imagens de referência','URLs de imágenes de referencia','参考图像 URL'],
+  'One public URL per line.':['Uma URL pública por linha.','Una URL pública por línea.','每行一个公开 URL。'],
+  'Generate native audio':['Gerar áudio nativo','Generar audio nativo','生成原生音频'],
+  'Source video URL':['URL do vídeo de origem','URL del vídeo de origen','源视频 URL'],
+  'Generation could not start':['Não foi possível iniciar a geração','No se pudo iniciar la generación','无法开始生成'],
+  'Task ID':['ID da tarefa','ID de la tarea','任务 ID'],
+  'Unknown saved model':['Modelo salvo desconhecido','Modelo guardado desconocido','未知的已保存模型'],
+  'Add a current model from the canvas menu.':['Adicione um modelo atual pelo menu do canvas.','Añade un modelo actual desde el menú del lienzo.','请从画布菜单添加当前模型。']
+});
+
 const locales:Locale[]=localeOptions.map(option=>option.locale);
 const textOriginals=new WeakMap<Text,string>();
 const textRenderedValues=new WeakMap<Text,string>();
