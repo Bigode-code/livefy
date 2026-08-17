@@ -47,7 +47,7 @@ export default async function handler(request,response){
     }
     const{deviceId,secret}=credentials(body);
     if(action==='heartbeat'){
-      const data=await rpc('extension_heartbeat',{p_device_id:deviceId,p_device_secret:secret,p_page_host:clean(body.page_host,120),p_page_type:clean(body.page_type,40),p_version:clean(body.version,24)});
+      const data=await rpc('extension_heartbeat_v2',{p_device_id:deviceId,p_device_secret:secret,p_page_host:clean(body.page_host,120),p_page_type:clean(body.page_type,40),p_version:clean(body.version,24),p_tiktok_logged_in:Boolean(body.tiktok_logged_in),p_tiktok_account_key:clean(body.tiktok_account_key,160),p_tiktok_username:clean(body.tiktok_username,120),p_shop_eligible:Boolean(body.shop_eligible),p_live_eligible:Boolean(body.live_eligible)});
       return json(response,200,{ok:true,data});
     }
     if(action==='events'){
