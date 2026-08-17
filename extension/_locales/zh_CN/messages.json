@@ -103,5 +103,170 @@
   },
   "never": {
     "message": "从未"
+  },
+  "controllerTitle": {
+    "message": "直播控制器"
+  },
+  "connectController": {
+    "message": "连接控制器"
+  },
+  "connectControllerHint": {
+    "message": "开始监控前，请在 Livefy 设置中配对此浏览器。"
+  },
+  "openPairing": {
+    "message": "打开配对设置"
+  },
+  "panelTab": {
+    "message": "面板"
+  },
+  "managerTab": {
+    "message": "直播管理"
+  },
+  "responsesTab": {
+    "message": "回复"
+  },
+  "securityTab": {
+    "message": "安全"
+  },
+  "liveTime": {
+    "message": "直播时长"
+  },
+  "hours": {
+    "message": "小时"
+  },
+  "minutes": {
+    "message": "分钟"
+  },
+  "seconds": {
+    "message": "秒"
+  },
+  "startMonitoring": {
+    "message": "开始监控"
+  },
+  "endMonitoring": {
+    "message": "结束监控"
+  },
+  "monitoringNote": {
+    "message": "此操作仅结束 Livefy 采集，不会结束 TikTok 直播。"
+  },
+  "viewers": {
+    "message": "观众"
+  },
+  "comments": {
+    "message": "评论"
+  },
+  "products": {
+    "message": "商品"
+  },
+  "liveActivity": {
+    "message": "直播动态"
+  },
+  "notifications": {
+    "message": "通知"
+  },
+  "shopSignal": {
+    "message": "商城信号"
+  },
+  "detectedProducts": {
+    "message": "检测到的商品"
+  },
+  "sessionControl": {
+    "message": "会话控制"
+  },
+  "managerHint": {
+    "message": "控制采集并检查与此浏览器连接的 TikTok 页面。"
+  },
+  "pageType": {
+    "message": "页面类型"
+  },
+  "observedHost": {
+    "message": "检测到的主机"
+  },
+  "clearActivity": {
+    "message": "清除本地动态"
+  },
+  "visibleComments": {
+    "message": "可见评论"
+  },
+  "responsesHint": {
+    "message": "从已连接 TikTok LIVE 页面采集的近期可见评论。"
+  },
+  "dataProtection": {
+    "message": "数据保护"
+  },
+  "securityHint": {
+    "message": "仅在启用采集时接收可见的 LIVE 数据。"
+  },
+  "credentialProtected": {
+    "message": "设备凭据已保护"
+  },
+  "credentialHint": {
+    "message": "仅存储在此 Chrome 配置文件中。"
+  },
+  "visibleDataOnly": {
+    "message": "仅限可见数据"
+  },
+  "visibleDataHint": {
+    "message": "不读取 Cookie、密码、私信或表单字段。"
+  },
+  "explicitCapture": {
+    "message": "明确的采集控制"
+  },
+  "explicitCaptureHint": {
+    "message": "可随时暂停或结束监控。"
+  },
+  "viewerFallback": {
+    "message": "TikTok 观众"
+  },
+  "productFallback": {
+    "message": "TikTok 商品"
+  },
+  "audienceUpdated": {
+    "message": "观众数据已更新"
+  },
+  "pageDetected": {
+    "message": "检测到 TikTok 页面"
+  },
+  "productDetected": {
+    "message": "检测到商品"
+  },
+  "waitingActivity": {
+    "message": "等待动态"
+  },
+  "waitingActivityHint": {
+    "message": "可见的 TikTok LIVE 事件将显示在这里。"
+  },
+  "noProducts": {
+    "message": "未检测到商品"
+  },
+  "noProductsHint": {
+    "message": "TikTok LIVE 中可见的商品卡将显示在这里。"
+  },
+  "noComments": {
+    "message": "未采集评论"
+  },
+  "noCommentsHint": {
+    "message": "已连接直播中的可见评论将显示在这里。"
+  },
+  "notPaired": {
+    "message": "未配对"
+  },
+  "monitoring": {
+    "message": "监控中"
+  },
+  "paused": {
+    "message": "已暂停"
+  },
+  "ready": {
+    "message": "就绪"
+  },
+  "pauseMonitoring": {
+    "message": "暂停监控"
+  },
+  "resumeMonitoring": {
+    "message": "继续监控"
+  },
+  "endMonitoringConfirm": {
+    "message": "结束此 Livefy 监控会话吗？"
   }
 }

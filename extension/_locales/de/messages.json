@@ -103,5 +103,170 @@
   },
   "never": {
     "message": "Nie"
+  },
+  "controllerTitle": {
+    "message": "LIVE-STEUERUNG"
+  },
+  "connectController": {
+    "message": "Steuerung verbinden"
+  },
+  "connectControllerHint": {
+    "message": "Koppeln Sie diesen Browser in den Livefy-Einstellungen, bevor Sie eine überwachte Sitzung starten."
+  },
+  "openPairing": {
+    "message": "Kopplungseinstellungen öffnen"
+  },
+  "panelTab": {
+    "message": "Panel"
+  },
+  "managerTab": {
+    "message": "Live-Manager"
+  },
+  "responsesTab": {
+    "message": "Antworten"
+  },
+  "securityTab": {
+    "message": "Sicherheit"
+  },
+  "liveTime": {
+    "message": "LIVE-ZEIT"
+  },
+  "hours": {
+    "message": "STUNDEN"
+  },
+  "minutes": {
+    "message": "MINUTEN"
+  },
+  "seconds": {
+    "message": "SEKUNDEN"
+  },
+  "startMonitoring": {
+    "message": "Überwachung starten"
+  },
+  "endMonitoring": {
+    "message": "Überwachung beenden"
+  },
+  "monitoringNote": {
+    "message": "Dies beendet die Livefy-Erfassung, nicht die TikTok-Übertragung."
+  },
+  "viewers": {
+    "message": "Zuschauer"
+  },
+  "comments": {
+    "message": "Kommentare"
+  },
+  "products": {
+    "message": "Produkte"
+  },
+  "liveActivity": {
+    "message": "LIVE-AKTIVITÄT"
+  },
+  "notifications": {
+    "message": "Benachrichtigungen"
+  },
+  "shopSignal": {
+    "message": "SHOP-SIGNAL"
+  },
+  "detectedProducts": {
+    "message": "Erkannte Produkte"
+  },
+  "sessionControl": {
+    "message": "SITZUNGSSTEUERUNG"
+  },
+  "managerHint": {
+    "message": "Erfassung steuern und die verbundene TikTok-Seite prüfen."
+  },
+  "pageType": {
+    "message": "Seitentyp"
+  },
+  "observedHost": {
+    "message": "Beobachteter Host"
+  },
+  "clearActivity": {
+    "message": "Lokale Aktivität löschen"
+  },
+  "visibleComments": {
+    "message": "SICHTBARE KOMMENTARE"
+  },
+  "responsesHint": {
+    "message": "Kürzlich erfasste sichtbare Kommentare der verbundenen TikTok-LIVE-Seite."
+  },
+  "dataProtection": {
+    "message": "DATENSCHUTZ"
+  },
+  "securityHint": {
+    "message": "Die Steuerung empfängt nur sichtbare LIVE-Daten bei aktiver Erfassung."
+  },
+  "credentialProtected": {
+    "message": "Gerätezugang geschützt"
+  },
+  "credentialHint": {
+    "message": "Nur in diesem Chrome-Profil gespeichert."
+  },
+  "visibleDataOnly": {
+    "message": "Nur sichtbare Daten"
+  },
+  "visibleDataHint": {
+    "message": "Keine Cookies, Passwörter, privaten Nachrichten oder Formularfelder."
+  },
+  "explicitCapture": {
+    "message": "Explizite Erfassungssteuerung"
+  },
+  "explicitCaptureHint": {
+    "message": "Überwachung jederzeit pausieren oder beenden."
+  },
+  "viewerFallback": {
+    "message": "TikTok-Zuschauer"
+  },
+  "productFallback": {
+    "message": "TikTok-Produkt"
+  },
+  "audienceUpdated": {
+    "message": "Publikum aktualisiert"
+  },
+  "pageDetected": {
+    "message": "TikTok-Seite erkannt"
+  },
+  "productDetected": {
+    "message": "Produkt erkannt"
+  },
+  "waitingActivity": {
+    "message": "Warte auf Aktivität"
+  },
+  "waitingActivityHint": {
+    "message": "Sichtbare TikTok-LIVE-Ereignisse erscheinen hier."
+  },
+  "noProducts": {
+    "message": "Keine Produkte erkannt"
+  },
+  "noProductsHint": {
+    "message": "Sichtbare Produktkarten erscheinen hier."
+  },
+  "noComments": {
+    "message": "Keine Kommentare erfasst"
+  },
+  "noCommentsHint": {
+    "message": "Sichtbare Kommentare der verbundenen LIVE erscheinen hier."
+  },
+  "notPaired": {
+    "message": "Nicht gekoppelt"
+  },
+  "monitoring": {
+    "message": "Überwachung"
+  },
+  "paused": {
+    "message": "Pausiert"
+  },
+  "ready": {
+    "message": "Bereit"
+  },
+  "pauseMonitoring": {
+    "message": "Überwachung pausieren"
+  },
+  "resumeMonitoring": {
+    "message": "Überwachung fortsetzen"
+  },
+  "endMonitoringConfirm": {
+    "message": "Diese Livefy-Überwachungssitzung beenden?"
   }
 }

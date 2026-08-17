@@ -103,5 +103,170 @@
   },
   "never": {
     "message": "Nunca"
+  },
+  "controllerTitle": {
+    "message": "CONTROLADOR DA LIVE"
+  },
+  "connectController": {
+    "message": "Conecte o controlador"
+  },
+  "connectControllerHint": {
+    "message": "Pareie este navegador nas Configurações da Livefy antes de iniciar uma sessão monitorada."
+  },
+  "openPairing": {
+    "message": "Abrir configurações de pareamento"
+  },
+  "panelTab": {
+    "message": "Painel"
+  },
+  "managerTab": {
+    "message": "Gestor da live"
+  },
+  "responsesTab": {
+    "message": "Respostas"
+  },
+  "securityTab": {
+    "message": "Segurança"
+  },
+  "liveTime": {
+    "message": "TEMPO EM LIVE"
+  },
+  "hours": {
+    "message": "HORAS"
+  },
+  "minutes": {
+    "message": "MINUTOS"
+  },
+  "seconds": {
+    "message": "SEGUNDOS"
+  },
+  "startMonitoring": {
+    "message": "Iniciar monitoramento"
+  },
+  "endMonitoring": {
+    "message": "Encerrar monitoramento"
+  },
+  "monitoringNote": {
+    "message": "Este controle encerra a captura da Livefy, não a transmissão do TikTok."
+  },
+  "viewers": {
+    "message": "Espectadores"
+  },
+  "comments": {
+    "message": "Comentários"
+  },
+  "products": {
+    "message": "Produtos"
+  },
+  "liveActivity": {
+    "message": "ATIVIDADE DA LIVE"
+  },
+  "notifications": {
+    "message": "Notificações"
+  },
+  "shopSignal": {
+    "message": "SINAL DA SHOP"
+  },
+  "detectedProducts": {
+    "message": "Produtos detectados"
+  },
+  "sessionControl": {
+    "message": "CONTROLE DA SESSÃO"
+  },
+  "managerHint": {
+    "message": "Controle a captura e verifique a página do TikTok conectada a este navegador."
+  },
+  "pageType": {
+    "message": "Tipo de página"
+  },
+  "observedHost": {
+    "message": "Host observado"
+  },
+  "clearActivity": {
+    "message": "Limpar atividade local"
+  },
+  "visibleComments": {
+    "message": "COMENTÁRIOS VISÍVEIS"
+  },
+  "responsesHint": {
+    "message": "Comentários visíveis recentes capturados da página TikTok LIVE conectada."
+  },
+  "dataProtection": {
+    "message": "PROTEÇÃO DE DADOS"
+  },
+  "securityHint": {
+    "message": "O controlador recebe apenas dados visíveis da LIVE enquanto a captura está ativada."
+  },
+  "credentialProtected": {
+    "message": "Credencial do dispositivo protegida"
+  },
+  "credentialHint": {
+    "message": "Armazenada somente neste perfil do Chrome."
+  },
+  "visibleDataOnly": {
+    "message": "Somente dados visíveis"
+  },
+  "visibleDataHint": {
+    "message": "Sem cookies, senhas, mensagens privadas ou campos de formulário."
+  },
+  "explicitCapture": {
+    "message": "Controle explícito da captura"
+  },
+  "explicitCaptureHint": {
+    "message": "Pause ou encerre o monitoramento a qualquer momento."
+  },
+  "viewerFallback": {
+    "message": "Espectador do TikTok"
+  },
+  "productFallback": {
+    "message": "Produto do TikTok"
+  },
+  "audienceUpdated": {
+    "message": "Audiência atualizada"
+  },
+  "pageDetected": {
+    "message": "Página do TikTok detectada"
+  },
+  "productDetected": {
+    "message": "Produto detectado"
+  },
+  "waitingActivity": {
+    "message": "Aguardando atividade"
+  },
+  "waitingActivityHint": {
+    "message": "Os eventos visíveis da TikTok LIVE aparecerão aqui."
+  },
+  "noProducts": {
+    "message": "Nenhum produto detectado"
+  },
+  "noProductsHint": {
+    "message": "Os cards de produtos visíveis na TikTok LIVE aparecerão aqui."
+  },
+  "noComments": {
+    "message": "Nenhum comentário capturado"
+  },
+  "noCommentsHint": {
+    "message": "Os comentários visíveis da LIVE conectada aparecerão aqui."
+  },
+  "notPaired": {
+    "message": "Não pareado"
+  },
+  "monitoring": {
+    "message": "Monitorando"
+  },
+  "paused": {
+    "message": "Pausado"
+  },
+  "ready": {
+    "message": "Pronto"
+  },
+  "pauseMonitoring": {
+    "message": "Pausar monitoramento"
+  },
+  "resumeMonitoring": {
+    "message": "Retomar monitoramento"
+  },
+  "endMonitoringConfirm": {
+    "message": "Encerrar esta sessão de monitoramento da Livefy?"
   }
 }

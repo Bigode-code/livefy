@@ -103,5 +103,170 @@
   },
   "never": {
     "message": "Nunca"
+  },
+  "controllerTitle": {
+    "message": "CONTROLADOR DEL LIVE"
+  },
+  "connectController": {
+    "message": "Conecta el controlador"
+  },
+  "connectControllerHint": {
+    "message": "Vincula este navegador en Configuración de Livefy antes de iniciar una sesión monitorizada."
+  },
+  "openPairing": {
+    "message": "Abrir configuración de vinculación"
+  },
+  "panelTab": {
+    "message": "Panel"
+  },
+  "managerTab": {
+    "message": "Gestor del live"
+  },
+  "responsesTab": {
+    "message": "Respuestas"
+  },
+  "securityTab": {
+    "message": "Seguridad"
+  },
+  "liveTime": {
+    "message": "TIEMPO EN LIVE"
+  },
+  "hours": {
+    "message": "HORAS"
+  },
+  "minutes": {
+    "message": "MINUTOS"
+  },
+  "seconds": {
+    "message": "SEGUNDOS"
+  },
+  "startMonitoring": {
+    "message": "Iniciar monitoreo"
+  },
+  "endMonitoring": {
+    "message": "Finalizar monitoreo"
+  },
+  "monitoringNote": {
+    "message": "Este control finaliza la captura de Livefy, no la transmisión de TikTok."
+  },
+  "viewers": {
+    "message": "Espectadores"
+  },
+  "comments": {
+    "message": "Comentarios"
+  },
+  "products": {
+    "message": "Productos"
+  },
+  "liveActivity": {
+    "message": "ACTIVIDAD DEL LIVE"
+  },
+  "notifications": {
+    "message": "Notificaciones"
+  },
+  "shopSignal": {
+    "message": "SEÑAL DE SHOP"
+  },
+  "detectedProducts": {
+    "message": "Productos detectados"
+  },
+  "sessionControl": {
+    "message": "CONTROL DE SESIÓN"
+  },
+  "managerHint": {
+    "message": "Controla la captura y revisa la página de TikTok conectada a este navegador."
+  },
+  "pageType": {
+    "message": "Tipo de página"
+  },
+  "observedHost": {
+    "message": "Host observado"
+  },
+  "clearActivity": {
+    "message": "Limpiar actividad local"
+  },
+  "visibleComments": {
+    "message": "COMENTARIOS VISIBLES"
+  },
+  "responsesHint": {
+    "message": "Comentarios visibles recientes capturados del TikTok LIVE conectado."
+  },
+  "dataProtection": {
+    "message": "PROTECCIÓN DE DATOS"
+  },
+  "securityHint": {
+    "message": "El controlador solo recibe datos visibles del LIVE mientras la captura está activa."
+  },
+  "credentialProtected": {
+    "message": "Credencial del dispositivo protegida"
+  },
+  "credentialHint": {
+    "message": "Guardada solo en este perfil de Chrome."
+  },
+  "visibleDataOnly": {
+    "message": "Solo datos visibles"
+  },
+  "visibleDataHint": {
+    "message": "Sin cookies, contraseñas, mensajes privados ni formularios."
+  },
+  "explicitCapture": {
+    "message": "Control explícito de captura"
+  },
+  "explicitCaptureHint": {
+    "message": "Pausa o finaliza el monitoreo en cualquier momento."
+  },
+  "viewerFallback": {
+    "message": "Espectador de TikTok"
+  },
+  "productFallback": {
+    "message": "Producto de TikTok"
+  },
+  "audienceUpdated": {
+    "message": "Audiencia actualizada"
+  },
+  "pageDetected": {
+    "message": "Página de TikTok detectada"
+  },
+  "productDetected": {
+    "message": "Producto detectado"
+  },
+  "waitingActivity": {
+    "message": "Esperando actividad"
+  },
+  "waitingActivityHint": {
+    "message": "Los eventos visibles de TikTok LIVE aparecerán aquí."
+  },
+  "noProducts": {
+    "message": "No se detectaron productos"
+  },
+  "noProductsHint": {
+    "message": "Las tarjetas de productos visibles aparecerán aquí."
+  },
+  "noComments": {
+    "message": "No se capturaron comentarios"
+  },
+  "noCommentsHint": {
+    "message": "Los comentarios visibles del LIVE conectado aparecerán aquí."
+  },
+  "notPaired": {
+    "message": "Sin vincular"
+  },
+  "monitoring": {
+    "message": "Monitoreando"
+  },
+  "paused": {
+    "message": "Pausado"
+  },
+  "ready": {
+    "message": "Listo"
+  },
+  "pauseMonitoring": {
+    "message": "Pausar monitoreo"
+  },
+  "resumeMonitoring": {
+    "message": "Reanudar monitoreo"
+  },
+  "endMonitoringConfirm": {
+    "message": "¿Finalizar esta sesión de monitoreo de Livefy?"
   }
 }

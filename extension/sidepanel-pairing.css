@@ -1,0 +1,14 @@
+.setup-state:has(.pairing-form){align-content:start;padding-top:34px}
+.pairing-form{display:grid;width:100%;max-width:360px;margin-top:4px;text-align:left}
+.pairing-form>label{display:grid;gap:7px;margin:0 0 12px}
+.pairing-form>label>span{color:#b9bec8;font-size:9px;font-weight:750}
+.pairing-form input[type="text"]{width:100%;height:40px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:#171a23;color:#f5f6f8;font:11px "Geist Mono",Consolas,monospace;outline:none}
+.pairing-form input[type="text"]:focus{border-color:#666d7d;box-shadow:inset 0 0 0 1px #666d7d}
+.pair-disclosure{margin:4px 0 14px;padding:12px;border:1px solid var(--line);border-radius:9px;background:#171a23}
+.pair-disclosure>b{font-size:9px}
+.pair-disclosure>p{margin:6px 0 10px;color:#858c9b;font-size:8px;line-height:1.5}
+.pair-disclosure>label{display:grid;grid-template-columns:16px 1fr;align-items:start;gap:7px;color:#afb4bf;font-size:8px;line-height:1.45}
+.pair-disclosure input{margin:1px 0;accent-color:var(--accent)}
+.pair-error{margin:0 0 10px;padding:9px;border:1px solid #5e2736;border-radius:7px;background:#24171e;color:#ff8ca3;font-size:8px;line-height:1.45}
+.text-action{height:34px;margin-top:7px;border:0;background:transparent;color:#8f96a6;font:700 9px Geist,"Segoe UI",sans-serif;cursor:pointer}
+.text-action:hover{color:#f5f6f8}

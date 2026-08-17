@@ -103,5 +103,170 @@
   },
   "never": {
     "message": "Никогда"
+  },
+  "controllerTitle": {
+    "message": "КОНТРОЛЛЕР ЭФИРА"
+  },
+  "connectController": {
+    "message": "Подключите контроллер"
+  },
+  "connectControllerHint": {
+    "message": "Подключите браузер в настройках Livefy перед началом мониторинга."
+  },
+  "openPairing": {
+    "message": "Открыть настройки подключения"
+  },
+  "panelTab": {
+    "message": "Панель"
+  },
+  "managerTab": {
+    "message": "Управление эфиром"
+  },
+  "responsesTab": {
+    "message": "Ответы"
+  },
+  "securityTab": {
+    "message": "Безопасность"
+  },
+  "liveTime": {
+    "message": "ВРЕМЯ ЭФИРА"
+  },
+  "hours": {
+    "message": "ЧАСЫ"
+  },
+  "minutes": {
+    "message": "МИНУТЫ"
+  },
+  "seconds": {
+    "message": "СЕКУНДЫ"
+  },
+  "startMonitoring": {
+    "message": "Начать мониторинг"
+  },
+  "endMonitoring": {
+    "message": "Завершить мониторинг"
+  },
+  "monitoringNote": {
+    "message": "Это завершит сбор Livefy, но не трансляцию TikTok."
+  },
+  "viewers": {
+    "message": "Зрители"
+  },
+  "comments": {
+    "message": "Комментарии"
+  },
+  "products": {
+    "message": "Товары"
+  },
+  "liveActivity": {
+    "message": "АКТИВНОСТЬ ЭФИРА"
+  },
+  "notifications": {
+    "message": "Уведомления"
+  },
+  "shopSignal": {
+    "message": "СИГНАЛ SHOP"
+  },
+  "detectedProducts": {
+    "message": "Обнаруженные товары"
+  },
+  "sessionControl": {
+    "message": "УПРАВЛЕНИЕ СЕАНСОМ"
+  },
+  "managerHint": {
+    "message": "Управляйте сбором и проверяйте подключённую страницу TikTok."
+  },
+  "pageType": {
+    "message": "Тип страницы"
+  },
+  "observedHost": {
+    "message": "Обнаруженный хост"
+  },
+  "clearActivity": {
+    "message": "Очистить локальную активность"
+  },
+  "visibleComments": {
+    "message": "ВИДИМЫЕ КОММЕНТАРИИ"
+  },
+  "responsesHint": {
+    "message": "Недавние видимые комментарии подключённой страницы TikTok LIVE."
+  },
+  "dataProtection": {
+    "message": "ЗАЩИТА ДАННЫХ"
+  },
+  "securityHint": {
+    "message": "Контроллер получает только видимые данные LIVE при включённом сборе."
+  },
+  "credentialProtected": {
+    "message": "Учётные данные устройства защищены"
+  },
+  "credentialHint": {
+    "message": "Хранятся только в этом профиле Chrome."
+  },
+  "visibleDataOnly": {
+    "message": "Только видимые данные"
+  },
+  "visibleDataHint": {
+    "message": "Без cookie, паролей, личных сообщений и полей форм."
+  },
+  "explicitCapture": {
+    "message": "Явное управление сбором"
+  },
+  "explicitCaptureHint": {
+    "message": "Мониторинг можно приостановить или завершить в любой момент."
+  },
+  "viewerFallback": {
+    "message": "Зритель TikTok"
+  },
+  "productFallback": {
+    "message": "Товар TikTok"
+  },
+  "audienceUpdated": {
+    "message": "Аудитория обновлена"
+  },
+  "pageDetected": {
+    "message": "Страница TikTok обнаружена"
+  },
+  "productDetected": {
+    "message": "Товар обнаружен"
+  },
+  "waitingActivity": {
+    "message": "Ожидание активности"
+  },
+  "waitingActivityHint": {
+    "message": "Видимые события TikTok LIVE появятся здесь."
+  },
+  "noProducts": {
+    "message": "Товары не обнаружены"
+  },
+  "noProductsHint": {
+    "message": "Видимые карточки товаров появятся здесь."
+  },
+  "noComments": {
+    "message": "Комментарии не собраны"
+  },
+  "noCommentsHint": {
+    "message": "Видимые комментарии подключённого эфира появятся здесь."
+  },
+  "notPaired": {
+    "message": "Не подключено"
+  },
+  "monitoring": {
+    "message": "Мониторинг"
+  },
+  "paused": {
+    "message": "Приостановлено"
+  },
+  "ready": {
+    "message": "Готово"
+  },
+  "pauseMonitoring": {
+    "message": "Приостановить мониторинг"
+  },
+  "resumeMonitoring": {
+    "message": "Продолжить мониторинг"
+  },
+  "endMonitoringConfirm": {
+    "message": "Завершить этот сеанс мониторинга Livefy?"
   }
 }

@@ -21,7 +21,8 @@ Captured data is restricted to visible public TikTok LIVE comments, visible prod
 5. Select **Load unpacked** and choose the repository's `extension` directory.
 6. Sign in to Livefy and open **Settings → Chrome extension**.
 7. Generate a pairing code, open the extension, accept the disclosure and enter the code.
-8. Open a TikTok LIVE page. The extension status should become connected and Diagnostics should show the device heartbeat.
+8. Click the Livefy toolbar icon to open the native side panel controller.
+9. Open a TikTok LIVE page. The extension status should become connected and Diagnostics should show the device heartbeat.
 
 ## Chrome Web Store submission
 
@@ -29,8 +30,8 @@ Captured data is restricted to visible public TikTok LIVE comments, visible prod
 - Use `https://livefy-tau.vercel.app/privacy-extension.html` as the public privacy-policy URL.
 - Declare the single purpose as connecting visible TikTok LIVE operational data to the user's Livefy workspace.
 - Disclose website content, user activity, authentication/device identifier and public user-generated content handled by the extension.
-- Explain the required `storage`, `alarms` and TikTok host permissions. Optional host access is requested only when a user configures a trusted self-hosted Livefy endpoint.
-- Provide an extension icon, screenshots of the popup in paired/unpaired states and a screenshot of the connected-device panel.
+- Explain the required `storage`, `alarms`, `sidePanel` and TikTok host permissions. Optional host access is requested only when a user configures a trusted self-hosted Livefy endpoint.
+- Provide an extension icon, screenshots of the side panel in paired/unpaired states and a screenshot of the connected-device panel.
 - Do not claim the extension sends comments or controls TikTok; the current version is read-only capture.
 
 The extension contains no remote executable code. The only remote asset used in its interface is the official Livefy SVG logo; all behavior is contained in the submitted package.
