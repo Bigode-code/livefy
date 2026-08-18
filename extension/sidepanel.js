@@ -1,7 +1,16 @@
 /* global chrome, document, window, navigator, LivefyBridge */
 const $=selector=>document.querySelector(selector);
 const $$=selector=>[...document.querySelectorAll(selector)];
-const send=message=>chrome.runtime.sendMessage(message).then(result=>{if(!result?.ok)throw new Error(result?.error||'Extension request failed.');return result.data});
+const send=message=>new Promise((resolve,reject)=>{
+  try{
+    chrome.runtime.sendMessage(message,result=>{
+      const runtimeError=chrome.runtime.lastError;
+      if(runtimeError){reject(new Error(runtimeError.message));return}
+      if(!result?.ok){reject(new Error(result?.error||'Extension request failed.'));return}
+      resolve(result.data);
+    });
+  }catch(error){reject(error)}
+});
 const message=(key,fallback)=>chrome.i18n.getMessage(key)||fallback;
 const icon=id=>`<svg aria-hidden="true"><use href="#${id}"/></svg>`;
 let currentState=null;
@@ -27,7 +36,8 @@ function render(state){
   const events=Array.isArray(state.recentEvents)?state.recentEvents:[];const comments=events.filter(event=>event.type==='comment');const products=new Set(events.filter(event=>event.type==='product').map(event=>event.product_id||event.name));const live=state.sessionStatus==='live'&&state.captureEnabled;const paused=state.sessionStatus==='paused';const stateNode=$('.live-state');stateNode.className=`live-state ${live?'live':paused?'paused':''}`;$('#session-label').textContent=live?message('monitoring','Monitoring'):paused?message('paused','Paused'):message('ready','Ready');$('#viewer-count').textContent=compact(state.viewerCount);$('#comment-count').textContent=compact(comments.length);$('#product-count').textContent=compact(products.size);$('#event-total').textContent=String(events.length);$('#manager-queue').textContent=String(state.queue?.length||0);$('#manager-sync').textContent=relative(state.lastSeenAt);$('#page-type').textContent=state.pageType||'—';$('#page-host').textContent=state.pageHost||'—';const primary=$('#session-primary');primary.querySelector('use').setAttribute('href',live?'#i-pause':'#i-play');primary.querySelector('span').textContent=live?message('pauseMonitoring','Pause monitoring'):paused?message('resumeMonitoring','Resume monitoring'):message('startMonitoring','Start monitoring');$('#end-session').hidden=!(live||paused);renderEvents(events);renderClock();
 }
 function renderClock(){if(!currentState)return;const value=duration(currentState.sessionStartedAt);$('#clock-hours').textContent=value.hours;$('#clock-minutes').textContent=value.minutes;$('#clock-seconds').textContent=value.seconds}
-async function refresh(){try{render(await send({type:'GET_STATE'}))}catch(error){$('#connection-label').textContent=error.message}}
+function showFatal(error){const label=$('#connection-label');if(label)label.textContent=`Erro: ${error instanceof Error?error.message:String(error)}`;const unpaired=$('#unpaired');if(unpaired)unpaired.hidden=false}
+async function refresh(){try{render(await send({type:'GET_STATE'}))}catch(error){showFatal(error)}}
 function openUrl(url){return chrome.tabs.create({url})}
 
 for(const tab of $$('.tab'))tab.addEventListener('click',()=>{for(const item of $$('.tab'))item.classList.toggle('active',item===tab);for(const panel of $$('.tab-panel'))panel.classList.toggle('active',panel.dataset.panel===tab.dataset.tab)});
@@ -40,5 +50,7 @@ $('#eligibility-retry').addEventListener('click',async()=>render(await send({typ
 $('#open-pairing').addEventListener('click',()=>openUrl('https://livefy-tau.vercel.app/#settings'));
 $('#open-dashboard').addEventListener('click',()=>openUrl(currentState?.dashboardUrl||'https://livefy-tau.vercel.app'));
 $('#open-options').addEventListener('click',()=>chrome.runtime.openOptionsPage());
+window.addEventListener('error',event=>showFatal(event.error||event.message));
+window.addEventListener('unhandledrejection',event=>showFatal(event.reason));
 chrome.storage.onChanged.addListener(()=>{void refresh()});
-localize();void refresh();window.setInterval(renderClock,1000);window.setInterval(()=>{void refresh()},5000);
+try{localize();void refresh();window.setInterval(renderClock,1000);window.setInterval(()=>{void refresh()},5000)}catch(error){showFatal(error)}

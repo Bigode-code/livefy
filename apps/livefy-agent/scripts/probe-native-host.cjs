@@ -1,3 +1,5 @@
+/* global require, process, Buffer, setTimeout, clearTimeout, console */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { spawn } = require('node:child_process');
 
 const executable = process.argv[2];
