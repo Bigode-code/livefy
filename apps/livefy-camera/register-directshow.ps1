@@ -1,6 +1,6 @@
-param([ValidateSet('register','unregister')][string]$Operation='register',[string]$Artifacts=(Join-Path $PSScriptRoot 'artifacts\x64\Release'))
+param([ValidateSet('register','unregister')][string]$Operation='register',[string]$Artifacts=(Join-Path $PSScriptRoot 'artifacts\x64\Release'),[string]$DllPath='')
 $ErrorActionPreference='Stop'
-$artifactsPath=[IO.Path]::GetFullPath($Artifacts);$helper=Join-Path $artifactsPath 'register-directshow.exe';$dll=Join-Path $artifactsPath 'LivefyCameraDirectShow.dll'
+$artifactsPath=[IO.Path]::GetFullPath($Artifacts);$helper=Join-Path $artifactsPath 'register-directshow.exe';$dll=if($DllPath){[IO.Path]::GetFullPath($DllPath)}else{Join-Path $artifactsPath 'LivefyCameraDirectShow.dll'}
 Write-Output "backend selecionado: directshow";Write-Output "arquitetura: x64";Write-Output "DLL absoluta: $dll";Write-Output "DLL existe: $(Test-Path -LiteralPath $dll)";Write-Output "registrador absoluto: $helper";Write-Output "registrador existe: $(Test-Path -LiteralPath $helper)";Write-Output "comando: `"$helper`" $Operation `"$dll`""
 if(!(Test-Path -LiteralPath $helper)){throw "Registrador DirectShow ausente: $helper"};if(!(Test-Path -LiteralPath $dll)){throw "DLL DirectShow ausente: $dll"}
 $start=New-Object Diagnostics.ProcessStartInfo;$start.FileName=$helper;$start.Arguments="$Operation `"$dll`"";$start.UseShellExecute=$false;$start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true
