@@ -1,0 +1,3 @@
+import{resolve}from'node:path';import{LivefyAgent}from'../../livefy-agent/dist/agent.js';import{MediaEngine}from'../../livefy-agent/dist/media-engine.js';
+const media=process.argv[2];if(!media)throw new Error('Usage: node run-camera-poc.mjs <video.mp4>');
+const engine=new MediaEngine(process.env.LIVEFY_FFMPEG_PATH||'ffmpeg',process.env.LIVEFY_FFPROBE_PATH||'ffprobe');const agent=new LivefyAgent(engine);await engine.loadMedia({id:'camera-poc',path:resolve(media)});await engine.play();console.log('Livefy Agent playing for Livefy Camera. Press Ctrl+C to stop.');setInterval(()=>console.log(JSON.stringify(agent.diagnostics())),5000);

@@ -31,7 +31,9 @@ export class LivefyAgent{
 
   diagnostics():AgentDiagnostics{
     const state=this.media.getState();const error=this.media.getLastError();
-    return{agent:{status:'online',pid:process.pid,uptimeMs:Date.now()-this.startedAt},mediaEngine:{status:error?'error':state.state==='playing'?'playing':state.state==='paused'?'paused':state.mediaId?'ready':'unavailable',ffmpegPath:this.media.ffmpegPath,ffprobePath:this.media.ffprobePath,lastError:error},virtualCamera:{name:'Livefy Camera',status:'not_installed',frameRate:30,resolution:'1080x1920',framesProduced:0,lastFrameAgeMs:null},audioOutput:{name:'Livefy Audio',status:'not_configured'},playback:state};
+    const camera=this.media.getVirtualCameraState();
+    const status=camera.consumerConnected?'running':camera.installed&&camera.registered?'installed':'not_installed';
+    return{agent:{status:'online',pid:process.pid,uptimeMs:Date.now()-this.startedAt},mediaEngine:{status:error?'error':state.state==='playing'?'playing':state.state==='paused'?'paused':state.mediaId?'ready':'unavailable',ffmpegPath:this.media.ffmpegPath,ffprobePath:this.media.ffprobePath,lastError:error},virtualCamera:{name:'Livefy Camera',status,installed:camera.installed,registered:camera.registered,running:camera.running,consumerConnected:camera.consumerConnected,width:camera.width,height:camera.height,fps:camera.fps,pixelFormat:camera.pixelFormat,framesProduced:camera.framesProduced,framesDropped:camera.framesDropped,lastFrameAt:camera.lastFrameAt},audioOutput:{name:'Livefy Audio',status:'not_configured'},playback:state};
   }
 
   private mediaPayload(payload:Record<string,unknown>):AgentMedia{return{id:this.string(payload.id,'id'),path:this.string(payload.path,'path'),name:typeof payload.name==='string'?payload.name:undefined,durationMs:typeof payload.durationMs==='number'?payload.durationMs:undefined}}

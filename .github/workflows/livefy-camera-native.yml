@@ -1,0 +1,19 @@
+name: Livefy Camera native build
+on:
+  push:
+    paths: ['apps/livefy-camera/**','.github/workflows/livefy-camera-native.yml']
+  pull_request:
+    paths: ['apps/livefy-camera/**','.github/workflows/livefy-camera-native.yml']
+jobs:
+  build:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - name: Build x64 Media Foundation camera
+        shell: powershell
+        run: ./apps/livefy-camera/build.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: livefy-camera-x64
+          path: apps/livefy-camera/artifacts/x64/Release

@@ -13,6 +13,7 @@
     "agent:test": "npm --prefix apps/livefy-agent test",
     "agent:start": "npm --prefix apps/livefy-agent start",
     "agent:diagnose": "npm --prefix apps/livefy-agent run diagnose",
+    "camera:browser-test": "node apps/livefy-camera/tools/browser-test/serve.mjs",
     "extension:icons": "node scripts/render-extension-icons.mjs",
     "test:visual": "playwright test",
     "preview": "vite preview --host 127.0.0.1"

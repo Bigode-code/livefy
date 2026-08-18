@@ -1,0 +1,2 @@
+import{createReadStream}from'node:fs';import{createServer}from'node:http';import{dirname,join}from'node:path';import{fileURLToPath}from'node:url';
+const root=dirname(fileURLToPath(import.meta.url));createServer((request,response)=>{const name=request.url==='/test.js'?'test.js':'index.html';response.setHeader('Content-Type',name.endsWith('.js')?'text/javascript; charset=utf-8':'text/html; charset=utf-8');createReadStream(join(root,name)).pipe(response)}).listen(4174,'127.0.0.1',()=>console.log('Livefy Camera browser test: http://127.0.0.1:4174'));
