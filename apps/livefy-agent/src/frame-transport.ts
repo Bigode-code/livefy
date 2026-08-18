@@ -15,6 +15,7 @@ export class FrameTransport{
   private framesDropped=0;
   private lastFrameAt:string|null=null;
   private writePending=false;
+  private connected=false;
 
   constructor(readonly width=1080,readonly height=1920,readonly fps=30,readonly pipePath=CAMERA_PIPE_PATH){this.latest=this.placeholder()}
 
@@ -23,9 +24,9 @@ export class FrameTransport{
   }
   async stop(){if(this.timer)clearInterval(this.timer);if(this.reconnectTimer)clearInterval(this.reconnectTimer);this.timer=null;this.reconnectTimer=null;this.consumer?.destroy();this.consumer=null}
   push(frame:Buffer){const expected=this.width*this.height*3/2;if(frame.length!==expected)throw new Error(`Invalid NV12 frame length: expected ${expected}, got ${frame.length}.`);this.latest=Buffer.from(frame)}
-  snapshot():FrameTransportSnapshot{return{running:Boolean(this.timer),consumerConnected:Boolean(this.consumer&&!this.consumer.destroyed),width:this.width,height:this.height,fps:this.fps,pixelFormat:'NV12',framesProduced:this.framesProduced,framesDropped:this.framesDropped,lastFrameAt:this.lastFrameAt,sequence:this.sequence}}
+  snapshot():FrameTransportSnapshot{return{running:Boolean(this.timer),consumerConnected:this.connected,width:this.width,height:this.height,fps:this.fps,pixelFormat:'NV12',framesProduced:this.framesProduced,framesDropped:this.framesDropped,lastFrameAt:this.lastFrameAt,sequence:this.sequence}}
 
-  private connect(){if(this.consumer)return;const socket=net.connect(this.pipePath);this.consumer=socket;socket.setNoDelay(true);socket.on('connect',()=>{});const clear=()=>{if(this.consumer===socket){this.consumer=null;this.writePending=false}};socket.on('close',clear);socket.on('error',clear)}
+  private connect(){if(this.consumer)return;const socket=net.connect(this.pipePath);this.consumer=socket;socket.setNoDelay(true);socket.on('connect',()=>{if(this.consumer===socket)this.connected=true});const clear=()=>{if(this.consumer===socket){this.consumer=null;this.connected=false;this.writePending=false}};socket.on('close',clear);socket.on('error',clear)}
   private publish(){const socket=this.consumer;if(!socket||socket.destroyed)return;if(this.writePending){this.framesDropped++;return}const header=Buffer.allocUnsafe(FRAME_HEADER_BYTES);header.write('LFNV',0,'ascii');header.writeUInt16LE(1,4);header.writeUInt16LE(0,6);header.writeUInt32LE(this.width,8);header.writeUInt32LE(this.height,12);header.writeUInt32LE(this.width,16);header.writeUInt32LE(this.latest.length,20);header.writeBigUInt64LE(BigInt(++this.sequence),24);header.writeBigUInt64LE(process.hrtime.bigint(),32);this.writePending=true;socket.write(Buffer.concat([header,this.latest]),error=>{if(this.consumer===socket)this.writePending=false;if(error){this.framesDropped++;return}this.framesProduced++;this.lastFrameAt=new Date().toISOString()})}
   private placeholder(){const size=this.width*this.height;const frame=Buffer.alloc(size*3/2);frame.fill(16,0,size);frame.fill(128,size);return frame}
 }
