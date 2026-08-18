@@ -1,5 +1,5 @@
 /* global chrome, importScripts, LivefyBridge, LivefyNativeClient, fetch */
-importScripts('shared.js','native-client.cjs');
+importScripts('shared.js','native-client.js');
 
 const DEFAULT_STATE={apiBase:LivefyBridge.API_DEFAULT,dashboardUrl:LivefyBridge.DASHBOARD_DEFAULT,captureEnabled:false,connected:false,controllerEnabled:false,tiktokLoggedIn:false,tiktokAccountKey:'',tiktokUsername:'',shopEligible:false,liveEligible:false,eligibilityStatus:'signed_out',lastError:'',lastSeenAt:null,pageHost:'',pageType:'',tiktokContextLastSeenAt:null,tiktokDetectionReason:'',queue:[],recentEvents:[],viewerCount:0,sessionStartedAt:null,sessionStatus:'idle',agentConnected:false,agentLastError:'',agentLastSeenAt:null};
 let flushing=false;

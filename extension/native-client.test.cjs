@@ -1,6 +1,11 @@
 const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
 const test=require('node:test');
-const{LivefyNativeClient}=require('./native-client.cjs');
+const vm=require('node:vm');
+const context={setTimeout,clearTimeout,Map,Promise,Error,Date};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'native-client.js'),'utf8'),context,{filename:'native-client.js'});
+const{LivefyNativeClient}=context;
 
 function event(){const listeners=[];return{addListener(listener){listeners.push(listener)},emit(value){for(const listener of listeners)listener(value)}}}
 function fakePort(){return{onMessage:event(),onDisconnect:event(),postMessage(){}}}
