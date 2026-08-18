@@ -5,7 +5,7 @@
   "version": "1.2.0",
   "minimum_chrome_version": "116",
   "description": "__MSG_extensionDescription__",
-  "permissions": ["storage", "alarms", "sidePanel"],
+  "permissions": ["storage", "alarms", "sidePanel", "nativeMessaging"],
   "host_permissions": [
     "https://*.tiktok.com/*",
     "https://livefy-tau.vercel.app/*"

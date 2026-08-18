@@ -9,6 +9,10 @@
     "typecheck": "tsc -b --pretty false",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
+    "agent:build": "npm --prefix apps/livefy-agent run build",
+    "agent:test": "npm --prefix apps/livefy-agent test",
+    "agent:start": "npm --prefix apps/livefy-agent start",
+    "agent:diagnose": "npm --prefix apps/livefy-agent run diagnose",
     "extension:icons": "node scripts/render-extension-icons.mjs",
     "test:visual": "playwright test",
     "preview": "vite preview --host 127.0.0.1"
@@ -28,6 +32,7 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@playwright/test": "^1.49.1",
+    "@types/node": "^26.2.0",
     "@types/react": "^19.0.3",
     "@types/react-dom": "^19.0.2",
     "@types/three": "^0.185.4",

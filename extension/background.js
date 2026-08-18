@@ -1,11 +1,12 @@
-/* global chrome, importScripts, LivefyBridge, fetch */
-importScripts('shared.js');
+/* global chrome, importScripts, LivefyBridge, LivefyNativeClient, fetch */
+importScripts('shared.js','native-client.cjs');
 
-const DEFAULT_STATE={apiBase:LivefyBridge.API_DEFAULT,dashboardUrl:LivefyBridge.DASHBOARD_DEFAULT,captureEnabled:false,connected:false,controllerEnabled:false,tiktokLoggedIn:false,tiktokAccountKey:'',tiktokUsername:'',shopEligible:false,liveEligible:false,eligibilityStatus:'signed_out',lastError:'',lastSeenAt:null,pageHost:'',pageType:'',queue:[],recentEvents:[],viewerCount:0,sessionStartedAt:null,sessionStatus:'idle'};
+const DEFAULT_STATE={apiBase:LivefyBridge.API_DEFAULT,dashboardUrl:LivefyBridge.DASHBOARD_DEFAULT,captureEnabled:false,connected:false,controllerEnabled:false,tiktokLoggedIn:false,tiktokAccountKey:'',tiktokUsername:'',shopEligible:false,liveEligible:false,eligibilityStatus:'signed_out',lastError:'',lastSeenAt:null,pageHost:'',pageType:'',queue:[],recentEvents:[],viewerCount:0,sessionStartedAt:null,sessionStatus:'idle',agentConnected:false,agentLastError:'',agentLastSeenAt:null};
 let flushing=false;
 
 async function state(){return{...DEFAULT_STATE,...await chrome.storage.local.get(Object.keys(DEFAULT_STATE)),...await chrome.storage.local.get(['deviceId','deviceSecret','deviceName'])}}
 async function patch(values){await chrome.storage.local.set(values);return state()}
+const nativeClient=new LivefyNativeClient({connectNative:name=>chrome.runtime.connectNative(name),onStatus:status=>void patch({agentConnected:status.connected,agentLastError:status.error||'',agentLastSeenAt:status.connected?new Date().toISOString():null})});
 async function api(payload){
   const current=await state();const response=await fetch(current.apiBase,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const body=await response.json().catch(()=>({error:'Invalid bridge response.'}));if(!response.ok||!body.ok)throw new Error(body.error||'Livefy bridge request failed.');return body.data;
 }
@@ -32,12 +33,18 @@ async function flush(){
   finally{flushing=false;if(continueFlush)void flush()}
 }
 
-async function configure(){const current=await chrome.storage.local.get(Object.keys(DEFAULT_STATE));await chrome.storage.local.set({...DEFAULT_STATE,...current});await chrome.alarms.create('livefy-heartbeat',{periodInMinutes:1});await chrome.alarms.create('livefy-flush',{periodInMinutes:1});await chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:true})}
+async function configure(){const current=await chrome.storage.local.get(Object.keys(DEFAULT_STATE));await chrome.storage.local.set({...DEFAULT_STATE,...current});await chrome.alarms.create('livefy-heartbeat',{periodInMinutes:1});await chrome.alarms.create('livefy-flush',{periodInMinutes:1});await chrome.alarms.create('livefy-agent',{periodInMinutes:0.5});await chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:true});void nativeClient.connect()}
 chrome.runtime.onInstalled.addListener(()=>{void configure()});
 void chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:true});
-chrome.runtime.onStartup.addListener(()=>{void heartbeat();void flush()});
-chrome.alarms.onAlarm.addListener(alarm=>{if(alarm.name==='livefy-heartbeat')void heartbeat();if(alarm.name==='livefy-flush')void flush()});
+chrome.runtime.onStartup.addListener(()=>{void heartbeat();void flush();void nativeClient.connect()});
+chrome.alarms.onAlarm.addListener(alarm=>{if(alarm.name==='livefy-heartbeat')void heartbeat();if(alarm.name==='livefy-flush')void flush();if(alarm.name==='livefy-agent')void nativeClient.connect()});
 chrome.runtime.onMessage.addListener((message,_sender,sendResponse)=>{
+  if(message?.type==='GET_AGENT_STATE'||message?.type==='AGENT_COMMAND'){
+    const command=message.type==='GET_AGENT_STATE'?'GET_DIAGNOSTICS':String(message.command||'');
+    const payload=message.type==='GET_AGENT_STATE'?{}:message.payload||{};
+    nativeClient.send(command,payload,Number(message.timeoutMs)||10000).then(value=>sendResponse({ok:true,data:value})).catch(error=>sendResponse({ok:false,error:error instanceof Error?error.message:'Livefy Agent error.'}));
+    return true;
+  }
   const run=async()=>{switch(message?.type){case'GET_STATE':return state();case'PAIR':return pair(message);case'DISCONNECT':await chrome.storage.local.remove(['deviceId','deviceSecret','deviceName']);return patch({connected:false,controllerEnabled:false,captureEnabled:false,queue:[],recentEvents:[],viewerCount:0,sessionStartedAt:null,sessionStatus:'idle',lastError:'',lastSeenAt:null});case'BRIDGE_CONTEXT':{const next=await patch({pageHost:String(message.context?.page_host||'').slice(0,120),pageType:String(message.context?.page_type||'').slice(0,40),tiktokLoggedIn:Boolean(message.context?.logged_in),tiktokAccountKey:String(message.context?.account_key||'').slice(0,160),tiktokUsername:String(message.context?.username||'').slice(0,120),shopEligible:Boolean(message.context?.shop_eligible),liveEligible:Boolean(message.context?.live_eligible)});if(next.deviceId)void heartbeat();return next}case'SET_CAPTURE':{const current=await state();if(message.enabled&&!current.controllerEnabled)throw new Error('Sign in to an eligible TikTok Shop or LIVE account first.');return patch({captureEnabled:Boolean(message.enabled),sessionStatus:message.enabled?'live':'paused',sessionStartedAt:message.enabled?current.sessionStartedAt||new Date().toISOString():current.sessionStartedAt})}case'START_SESSION':{const current=await state();if(!current.controllerEnabled)throw new Error('Sign in to an eligible TikTok Shop or LIVE account first.');return patch({captureEnabled:true,sessionStatus:'live',sessionStartedAt:current.sessionStartedAt||new Date().toISOString()})}case'PAUSE_SESSION':return patch({captureEnabled:false,sessionStatus:'paused'});case'END_SESSION':return patch({captureEnabled:false,sessionStatus:'ended',sessionStartedAt:null});case'CLEAR_SESSION_EVENTS':return patch({recentEvents:[],viewerCount:0});case'BRIDGE_EVENTS':return enqueue(Array.isArray(message.events)?message.events.slice(0,64):[]);case'SAVE_OPTIONS':{const apiBase=String(message.apiBase||'').trim();const dashboardUrl=String(message.dashboardUrl||'').trim();if(!apiBase.startsWith('https://')&&!apiBase.startsWith('http://127.0.0.1'))throw new Error('Bridge URL must use HTTPS.');return patch({apiBase,dashboardUrl})}case'RETRY':await heartbeat();await flush();return state();default:throw new Error('Unknown extension message.')}};
   run().then(value=>sendResponse({ok:true,data:value})).catch(error=>sendResponse({ok:false,error:error instanceof Error?error.message:'Extension error.'}));return true;
 });
