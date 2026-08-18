@@ -9,7 +9,7 @@ This project exposes the same `Livefy Camera` through two automatically selected
 
 The existing Agent owns the only FFmpeg process and authoritative playback clock. FFmpeg outputs 1080×1920, 30 FPS, NV12 raw frames. The Agent retains the latest frame and sends a framed copy at camera cadence to `\\.\pipe\livefy-camera-frames-v1`. The selected camera backend owns the named-pipe endpoint with an explicit ACL for authenticated users, Local System and administrators. It retains the last complete frame and copies it into capture samples. No compressed video, network service, Supabase, Native Messaging or per-frame file is involved.
 
-The DirectShow capture pin advertises NV12 first and YUY2 as a compatibility fallback. It implements `IAMStreamConfig` and `IKsPropertySet` with `PIN_CATEGORY_CAPTURE`, and registers CLSID `{B8A1DA92-D00F-4EEA-85EC-91017B657A55}` in `CLSID_VideoInputDeviceCategory`. YUY2 conversion reads the already-decoded NV12 frame and does not add another decoder.
+The DirectShow capture pin advertises YUY2 first for Chrome compatibility and NV12 as a secondary zero-copy option. It implements `IAMStreamConfig` and `IKsPropertySet` with `PIN_CATEGORY_CAPTURE`, and registers CLSID `{B8A1DA92-D00F-4EEA-85EC-91017B657A55}` in `CLSID_VideoInputDeviceCategory`. YUY2 conversion reads the already-decoded NV12 frame and does not add another decoder.
 
 If the Agent is absent, the Media Source produces a stable black NV12 placeholder. Pause kills the decoder but does not stop the frame transport, so the last frame is repeated. Resume and seek restart the same authoritative decoder at the clock position while the camera device remains open.
 

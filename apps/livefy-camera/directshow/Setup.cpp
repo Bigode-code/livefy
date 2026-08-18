@@ -2,10 +2,10 @@
 #include <initguid.h>
 #include "LivefyDirectShow.h"
 
-const AMOVIESETUP_MEDIATYPE PinType={&MEDIATYPE_Video,&MEDIASUBTYPE_NULL};
+const AMOVIESETUP_MEDIATYPE PinType={&MEDIATYPE_Video,&MEDIASUBTYPE_YUY2};
 const AMOVIESETUP_PIN Pin={L"Capture",FALSE,TRUE,FALSE,FALSE,&CLSID_NULL,nullptr,1,&PinType};
 const AMOVIESETUP_FILTER Filter={&CLSID_LivefyCameraDirectShow,L"Livefy Camera",MERIT_DO_NOT_USE,1,&Pin};
-const REGPINTYPES RegisteredPinType={&MEDIATYPE_Video,&MEDIASUBTYPE_NULL};
+const REGPINTYPES RegisteredPinType={&MEDIATYPE_Video,&MEDIASUBTYPE_YUY2};
 const REGFILTERPINS RegisteredPin={L"Capture",FALSE,TRUE,FALSE,FALSE,&CLSID_NULL,nullptr,1,&RegisteredPinType};
 CFactoryTemplate g_Templates[]={{L"Livefy Camera",&CLSID_LivefyCameraDirectShow,LivefyCameraFilter::CreateInstance,nullptr,&Filter}};int g_cTemplates=1;
 
