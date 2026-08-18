@@ -1,3 +1,4 @@
+/* global module, setTimeout, clearTimeout */
 (function(root,factory){
   const exported=factory();
   if(typeof module==='object'&&module.exports)module.exports=exported;

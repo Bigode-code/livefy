@@ -4,6 +4,7 @@ const supabaseUrl=import.meta.env.VITE_SUPABASE_URL as string|undefined;
 const supabaseKey=import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string|undefined;
 
 export const supabaseConfigured=Boolean(supabaseUrl&&supabaseKey);
+export const supabaseProjectUrl=supabaseUrl??'';
 
 if(!supabaseConfigured){
   console.error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.');

@@ -7,11 +7,14 @@ import { ExtensionDevices } from './components/ui/extension-devices';
 import { useI18n } from './i18n';
 import { useLivefyData,type LiveEvent } from './livefy-data';
 import { supabase } from './lib/supabase';
+import { uploadResumable } from './lib/resumable-upload';
 
 const CreationStudio=lazy(()=>import('./components/ui/creation-studio'));
 const BroadcastStudio=lazy(()=>import('./components/ui/broadcast-studio'));
 
 function Overview(){return <StudioOverview/>}
+
+function formatFileSize(bytes:number){if(bytes<1024*1024)return`${(bytes/1024).toFixed(1)} KB`;if(bytes<1024*1024*1024)return`${(bytes/1024/1024).toFixed(1)} MB`;return`${(bytes/1024/1024/1024).toFixed(2)} GB`}
 
 function Activity(){
   const{events,loading}=useLivefyData();
@@ -45,9 +48,9 @@ function Products(){
 
 function Media(){
   const{media,loading,workspace,refresh}=useLivefyData();
-  const input=useRef<HTMLInputElement>(null);const[uploading,setUploading]=useState(false);const[message,setMessage]=useState('');
-  const upload=async(event:ChangeEvent<HTMLInputElement>)=>{const file=event.target.files?.[0];if(!file||!workspace)return;setUploading(true);setMessage('');const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=`${workspace.id}/${crypto.randomUUID()}-${safe}`;const stored=await supabase.storage.from('media').upload(path,file,{contentType:file.type,upsert:false});if(stored.error)setMessage(stored.error.message);else{const inserted=await supabase.from('media_items').insert({workspace_id:workspace.id,name:file.name,storage_path:path,status:'ready',position:media.length});if(inserted.error){await supabase.storage.from('media').remove([path]);setMessage(inserted.error.message)}else{setMessage('Media uploaded.');await refresh()}}setUploading(false);event.target.value=''};
-  return <div className="page wide"><PageHeader eyebrow="Output" title="Media" description="Files stored in the private Livefy media bucket." actions={<><input ref={input} className="visually-hidden" type="file" accept="video/*,audio/*,image/*" onChange={event=>void upload(event)}/><Button icon={<Icon.Plus/>} disabled={uploading||!workspace} onClick={()=>input.current?.click()}>{uploading?'Uploading…':'Add media'}</Button></>}/>{message&&<ActionMessage message={message}/>}
+  const{t}=useI18n();const input=useRef<HTMLInputElement>(null);const[uploading,setUploading]=useState(false);const[progress,setProgress]=useState(0);const[message,setMessage]=useState('');
+  const upload=async(event:ChangeEvent<HTMLInputElement>)=>{const file=event.target.files?.[0];if(!file||!workspace)return;setUploading(true);setProgress(0);setMessage('');const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=`${workspace.id}/${crypto.randomUUID()}-${safe}`;try{await uploadResumable({bucket:'media',path,file,onProgress:setProgress});const inserted=await supabase.from('media_items').insert({workspace_id:workspace.id,name:file.name,storage_path:path,status:'ready',position:media.length});if(inserted.error){await supabase.storage.from('media').remove([path]);throw inserted.error}setMessage(t('Media uploaded.'));await refresh()}catch(error){const detail=error instanceof Error?error.message:String(error);const size=formatFileSize(file.size);setMessage(/maximum allowed size|maximum.*size|too large|entity too large/i.test(detail)?`${t('The video exceeds the Storage limit configured for this project.')} ${size}. ${t('Increase the global file size limit in Supabase Storage settings and try again.')}`:detail)}finally{setUploading(false);setProgress(0);event.target.value=''}};
+  return <div className="page wide"><PageHeader eyebrow="Output" title="Media" description="Files stored in the private Livefy media bucket." actions={<><input ref={input} className="visually-hidden" type="file" accept="video/*,audio/*,image/*" onChange={event=>void upload(event)}/><Button icon={<Icon.Plus/>} disabled={uploading||!workspace} onClick={()=>input.current?.click()}>{uploading?`${t('Uploading…')} ${progress}%`:'Add media'}</Button></>}/>{message&&<ActionMessage message={message}/>}
     <Section title="Playlist" meta={<span>{media.length} items</span>}>{loading?<Skeleton/>:media.length?<div className="playlist">{media.map((item,index)=><div className={item.status==='playing'?'playing':''} key={item.id}><span>{item.status==='playing'?<Icon.SpeakerHigh/>:index+1}</span><div><b>{item.name}</b><small>{item.status} · {formatDuration(item.duration_seconds)}</small></div><Icon.DotsSixVertical/></div>)}</div>:<EmptyState/>}</Section>
   </div>;
 }
