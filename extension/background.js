@@ -39,8 +39,13 @@ void chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:true});
 chrome.runtime.onStartup.addListener(()=>{void heartbeat();void flush();void nativeClient.connect()});
 chrome.alarms.onAlarm.addListener(alarm=>{if(alarm.name==='livefy-heartbeat')void heartbeat();if(alarm.name==='livefy-flush')void flush();if(alarm.name==='livefy-agent')void nativeClient.connect()});
 chrome.runtime.onMessage.addListener((message,_sender,sendResponse)=>{
+  if(message?.type==='GET_WEB_STATE'){
+    state().then(current=>sendResponse({ok:true,data:{agentConnected:current.agentConnected,agentLastError:current.agentLastError,pageHost:current.pageHost,pageType:current.pageType,tiktokDetected:/tiktok\.com$/i.test(current.pageHost)||/\.tiktok\.com$/i.test(current.pageHost),controllerEnabled:current.controllerEnabled}})).catch(error=>sendResponse({ok:false,error:error instanceof Error?error.message:'Extension state failed.'}));return true;
+  }
   if(message?.type==='GET_AGENT_STATE'||message?.type==='AGENT_COMMAND'){
     const command=message.type==='GET_AGENT_STATE'?'GET_DIAGNOSTICS':String(message.command||'');
+    const allowed=new Set(['GET_DIAGNOSTICS','GET_AGENT_STATUS','GET_PREPARATION_STATE','GET_PLAYBACK_STATE','PREPARE_SESSION','PLAY','PAUSE','STOP','SEEK','NEXT','PREVIOUS','SET_VOLUME']);
+    if(!allowed.has(command)){sendResponse({ok:false,error:'Agent command is not allowed.'});return false}
     const payload=message.type==='GET_AGENT_STATE'?{}:message.payload||{};
     nativeClient.send(command,payload,Number(message.timeoutMs)||10000).then(value=>sendResponse({ok:true,data:value})).catch(error=>sendResponse({ok:false,error:error instanceof Error?error.message:'Livefy Agent error.'}));
     return true;

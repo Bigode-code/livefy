@@ -4,7 +4,7 @@ import { supabase } from './lib/supabase';
 import { useAuth } from './auth';
 
 export type Workspace={id:string;name:string};
-export type LiveSession={id:string;title:string;platform:string;mode:'shop'|'game'|'creative';status:'draft'|'live'|'paused'|'ended';viewer_count:number;started_at:string|null;ended_at:string|null;created_at:string};
+export type LiveSession={id:string;title:string;platform:string;mode:'shop'|'game'|'creative';status:'draft'|'live'|'paused'|'ended';runtime_state?:string;runtime_error?:string|null;runtime_updated_at?:string|null;viewer_count:number;started_at:string|null;ended_at:string|null;created_at:string};
 export type Product={id:string;external_id:string|null;name:string;sku:string|null;price:number;currency:string;status:string;rotation_seconds:number;orders:number;gmv:number};
 export type LiveEvent={id:number;type:string;message:string;severity:'info'|'success'|'warning'|'error';metadata:Record<string,unknown>;created_at:string};
 export type LiveComment={id:string;author_name:string;author_handle:string|null;body:string;classification:string|null;status:string;reply:string|null;created_at:string};
