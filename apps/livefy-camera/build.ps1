@@ -25,6 +25,15 @@ msbuild $project /m "/p:Configuration=$Configuration" "/p:Platform=$Platform" "/
 $artifacts=Join-Path $root "artifacts\$Platform\$Configuration";New-Item -ItemType Directory -Force -Path $artifacts|Out-Null
 $dll=Get-ChildItem -Path $sample -Filter VirtualCameraMediaSource.dll -Recurse|Where-Object FullName -Match "\\$Platform\\$Configuration\\"|Select-Object -First 1
 if(!$dll){throw 'VirtualCameraMediaSource.dll was not produced.'};Copy-Item -Force $dll.FullName (Join-Path $artifacts 'LivefyCameraMediaSource.dll')
+$compiler=Get-Command cl.exe -ErrorAction SilentlyContinue
+if(!$compiler){
+  $vswhere=Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+  if(!(Test-Path -LiteralPath $vswhere)){throw 'vswhere.exe was not found.'}
+  $installation=(& $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath|Select-Object -First 1)
+  if(!$installation){throw 'Visual C++ build tools were not found.'}
+  $devcmd=Join-Path $installation 'Common7\Tools\VsDevCmd.bat'
+  & cmd.exe /s /c "`"$devcmd`" -arch=$Platform -host_arch=x64 >nul && set"|ForEach-Object{if($_-match '^([^=]+)=(.*)$'){Set-Item -Path "env:$($matches[1])" -Value $matches[2]}}
+}
 $native=Join-Path $root 'native';cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-manager.cpp') "/Fe:$(Join-Path $artifacts 'livefy-camera-manager.exe')" /link mfplat.lib mfuuid.lib advapi32.lib
 if($LASTEXITCODE-ne 0){throw 'camera-manager build failed.'}
 cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-test.cpp') "/Fe:$(Join-Path $artifacts 'camera-test.exe')" /link mfplat.lib mf.lib mfreadwrite.lib mfuuid.lib
