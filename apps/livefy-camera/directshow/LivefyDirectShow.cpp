@@ -2,7 +2,7 @@
 #include <sddl.h>
 #include "LivefyDirectShow.h"
 
-namespace{constexpr LONG Width=1080,Height=1920,Fps=30;constexpr DWORD NV12Bytes=Width*Height*3/2;constexpr REFERENCE_TIME FrameDuration=10000000/Fps;constexpr wchar_t PipeName[]=L"\\\\.\\pipe\\livefy-camera-frames-v1";constexpr DWORD HeaderBytes=40;uint32_t U32(const BYTE* p){return p[0]|(p[1]<<8)|(p[2]<<16)|(p[3]<<24);}}
+namespace{constexpr LONG Width=1080,Height=1920,Fps=30;constexpr DWORD NV12Bytes=Width*Height*3/2;constexpr REFERENCE_TIME FrameDuration=10000000/Fps;constexpr wchar_t PipeName[]=L"\\\\.\\pipe\\livefy-camera-frames-v2";constexpr DWORD HeaderBytes=40;uint32_t U32(const BYTE* p){return p[0]|(p[1]<<8)|(p[2]<<16)|(p[3]<<24);}}
 
 LivefyFrameReader::LivefyFrameReader(){Placeholder();m_thread=std::thread(&LivefyFrameReader::Run,this);}
 LivefyFrameReader::~LivefyFrameReader(){m_stopping=true;if(m_thread.joinable())m_thread.join();}

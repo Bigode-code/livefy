@@ -1,6 +1,7 @@
 import net,{type Socket}from'node:net';
+import{release}from'node:os';
 
-export const CAMERA_PIPE_PATH='\\\\.\\pipe\\livefy-camera-frames-v1';
+export const CAMERA_PIPE_PATH=Number(release().split('.')[2]??0)<22000?'\\\\.\\pipe\\livefy-camera-frames-v2':'\\\\.\\pipe\\livefy-camera-frames-v1';
 export const FRAME_HEADER_BYTES=40;
 export type FrameTransportSnapshot={running:boolean;consumerConnected:boolean;width:number;height:number;fps:number;pixelFormat:'NV12';framesProduced:number;framesDropped:number;lastFrameAt:string|null;sequence:number};
 
