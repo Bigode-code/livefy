@@ -4,6 +4,8 @@ $root=Split-Path -Parent $MyInvocation.MyCommand.Path
 $generated=Join-Path $root 'generated\Windows-Camera'
 $sample=Join-Path $generated 'Samples\VirtualCamera'
 $commit='790ac218eba8b6995393e9cc9537dfd7730fdb83'
+$classicGenerated=Join-Path $root 'generated\Windows-classic-samples'
+$classicCommit='d59e5f1dc9c768615e4e1ab1f0f009e6a3ed747c'
 if(!(Test-Path (Join-Path $generated '.git'))){New-Item -ItemType Directory -Force -Path (Split-Path -Parent $generated)|Out-Null;git clone https://github.com/microsoft/Windows-Camera.git $generated}
 git -C $generated fetch --depth 1 origin $commit
 git -C $generated checkout --force $commit
@@ -38,4 +40,17 @@ $native=Join-Path $root 'native';cl /nologo /std:c++17 /EHsc /O2 (Join-Path $nat
 if($LASTEXITCODE-ne 0){throw 'camera-manager build failed.'}
 cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-test.cpp') "/Fe:$(Join-Path $artifacts 'camera-test.exe')" /link mfplat.lib mf.lib mfreadwrite.lib mfuuid.lib ole32.lib
 if($LASTEXITCODE-ne 0){throw 'camera-test build failed.'}
+cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'directshow-test.cpp') "/Fe:$(Join-Path $artifacts 'directshow-test.exe')" /link strmiids.lib ole32.lib
+if($LASTEXITCODE-ne 0){throw 'directshow-test build failed.'}
+if(!(Test-Path (Join-Path $classicGenerated '.git'))){git clone https://github.com/microsoft/Windows-classic-samples.git $classicGenerated}
+git -C $classicGenerated fetch --depth 1 origin $classicCommit
+git -C $classicGenerated checkout --force $classicCommit
+if((git -C $classicGenerated rev-parse HEAD).Trim()-ne $classicCommit){throw 'DirectShow sample commit verification failed.'}
+$baseClasses=Join-Path $classicGenerated 'Samples\Win7Samples\multimedia\directshow\baseclasses';$directShowBuild=Join-Path $root 'generated\directshow-build'
+cmake -S (Join-Path $root 'directshow') -B $directShowBuild -A $Platform "-DDIRECTSHOW_BASECLASSES_DIR=$baseClasses"
+if($LASTEXITCODE-ne 0){throw 'DirectShow CMake configure failed.'}
+cmake --build $directShowBuild --config $Configuration --parallel
+if($LASTEXITCODE-ne 0){throw 'DirectShow backend build failed.'}
+$directShowDll=Get-ChildItem -Path $directShowBuild -Filter LivefyCameraDirectShow.dll -Recurse|Select-Object -First 1
+if(!$directShowDll){throw 'LivefyCameraDirectShow.dll was not produced.'};Copy-Item -Force $directShowDll.FullName (Join-Path $artifacts 'LivefyCameraDirectShow.dll')
 Write-Output $artifacts
