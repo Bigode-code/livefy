@@ -8,6 +8,7 @@
 #pragma comment(lib, "ole32.lib")
 #pragma comment(lib, "oleaut32.lib")
 #pragma comment(lib, "strmiids.lib")
+#pragma comment(lib, "advapi32.lib")
 
 static void PrintHr(const wchar_t* label, HRESULT hr) {
   std::wcout << label << L"=0x" << std::hex << std::setw(8) << std::setfill(L'0')
@@ -17,6 +18,24 @@ static void PrintHr(const wchar_t* label, HRESULT hr) {
 static std::wstring GuidText(const GUID& guid) {
   wchar_t value[64]{};
   return StringFromGUID2(guid, value, ARRAYSIZE(value)) ? value : L"<invalid>";
+}
+
+static std::wstring InprocServerPath(const std::wstring& clsid) {
+  if (clsid.empty()) return {};
+  const std::wstring keyPath = L"CLSID\\" + clsid + L"\\InprocServer32";
+  HKEY key = nullptr;
+  if (RegOpenKeyExW(HKEY_CLASSES_ROOT, keyPath.c_str(), 0, KEY_READ, &key) != ERROR_SUCCESS) return {};
+  wchar_t raw[32768]{};
+  DWORD type = 0;
+  DWORD bytes = sizeof(raw);
+  const LONG result = RegQueryValueExW(key, nullptr, nullptr, &type, reinterpret_cast<BYTE*>(raw), &bytes);
+  RegCloseKey(key);
+  if (result != ERROR_SUCCESS || (type != REG_SZ && type != REG_EXPAND_SZ)) return {};
+  if (type == REG_EXPAND_SZ) {
+    wchar_t expanded[32768]{};
+    if (ExpandEnvironmentStringsW(raw, expanded, ARRAYSIZE(expanded))) return expanded;
+  }
+  return raw;
 }
 
 static std::wstring ReadString(IPropertyBag* bag, const wchar_t* key, HRESULT& hr) {
@@ -130,10 +149,16 @@ int wmain() {
     }
 
     const bool target = friendlyName == L"Livefy Camera" || friendlyName == L"OBS Virtual Camera" || friendlyName == L"LSVCam" || friendlyName == L"HD WebCam";
+    const std::wstring modulePath = InprocServerPath(clsid);
+    std::wcout << L"com.InprocServer32=" << (modulePath.empty() ? L"<not an in-process COM class>" : modulePath) << L"\n";
+    const bool loadedBefore = !modulePath.empty() && GetModuleHandleW(modulePath.c_str()) != nullptr;
+    std::wcout << L"com.moduleLoaded.beforeBind=" << (loadedBefore ? L"true" : L"false") << L"\n";
     IBaseFilter* filter = nullptr;
     HRESULT objectHr = moniker->BindToObject(nullptr, nullptr, IID_PPV_ARGS(&filter));
     PrintHr(L"moniker.BindToObject.hr", objectHr);
     std::wcout << L"filter.instantiated=" << (filter ? L"true" : L"false") << L"\n";
+    const bool loadedAfter = !modulePath.empty() && GetModuleHandleW(modulePath.c_str()) != nullptr;
+    std::wcout << L"com.moduleLoaded.afterBind=" << (loadedAfter ? L"true" : L"false") << L"\n";
     if (target && filter) PrintPins(filter);
     if (filter) filter->Release();
     moniker->Release();
