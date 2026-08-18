@@ -14,7 +14,9 @@ if($LASTEXITCODE-ne 0){throw 'Agent TypeScript build failed.'}
 New-Item -ItemType Directory -Force -Path $hostRoot | Out-Null
 $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 if(!(Test-Path -LiteralPath $compiler)){throw 'Windows C# compiler was not found.'}
-& $compiler /nologo /target:exe /out:(Join-Path $hostRoot 'livefy-agent-host.exe') (Join-Path $agentRoot 'launcher\Program.cs')
+$launcherPath=Join-Path $hostRoot 'livefy-agent-host.exe'
+$launcherSource=Join-Path $agentRoot 'launcher\Program.cs'
+& $compiler /nologo /target:exe "/out:$launcherPath" $launcherSource
 if($LASTEXITCODE-ne 0){throw 'Native host launcher build failed.'}
 
 New-Item -ItemType Directory -Force -Path $agentInstall | Out-Null
