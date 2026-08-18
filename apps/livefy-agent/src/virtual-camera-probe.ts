@@ -5,6 +5,6 @@ export class VirtualCameraProbe{
   private installed=false;private registered=false;private timer:NodeJS.Timeout;
   constructor(){void this.refresh();this.timer=setInterval(()=>void this.refresh(),5000);this.timer.unref()}
   snapshot(){return{backend,installed:this.installed,registered:this.registered}}
-  async refresh(){try{const{stdout}=await execFileAsync('reg.exe',['query',REGISTRY_KEY,'/ve'],{windowsHide:true});this.registered=stdout.includes('REG_SZ');this.installed=this.registered&&stdout.toLowerCase().includes(backend==='media-foundation'?'livefycameramediasource.dll':'livefycameradirectshow.dll')}catch{this.installed=false;this.registered=false}return this.snapshot()}
+  async refresh(){try{const{stdout}=await execFileAsync('reg.exe',['query',REGISTRY_KEY,'/ve'],{windowsHide:true});this.registered=stdout.includes('REG_SZ');this.installed=this.registered&&stdout.toLowerCase().includes(backend==='media-foundation'?'livefycameramediasource.dll':'livefycameradirectshow')}catch{this.installed=false;this.registered=false}return this.snapshot()}
 }
 export const defaultVirtualCameraProbe=new VirtualCameraProbe();
