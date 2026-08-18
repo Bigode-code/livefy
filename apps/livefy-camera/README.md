@@ -32,7 +32,9 @@ Run PowerShell as administrator:
 .\apps\livefy-camera\uninstall.ps1
 ```
 
-Uninstall first calls `IMFVirtualCamera::Remove()` and only then removes COM registration. It deliberately leaves installed files until camera consumers close them.
+The installer performs an OS-build preflight before elevation or file changes. Windows 10 is rejected because it does not export `MFCreateVirtualCamera`; the product does not fall back to OBS, RTMP or an empty legacy capture device.
+
+Uninstall first calls `IMFVirtualCamera::Remove()`, then removes COM registration and the installed camera files. Camera consumers must be closed first.
 
 ## A–H test harness
 

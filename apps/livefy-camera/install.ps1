@@ -1,5 +1,7 @@
 param([string]$Artifacts=(Join-Path $PSScriptRoot 'artifacts\x64\Release'))
 $ErrorActionPreference='Stop'
+$windowsBuild=[Environment]::OSVersion.Version.Build
+if($windowsBuild-lt 22000){throw "Livefy Camera requires Windows 11 build 22000 or newer. Detected Windows build $windowsBuild. No files or registry entries were changed."}
 $principal=New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if(!$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
   $arguments=@('-NoProfile','-ExecutionPolicy','Bypass','-File',"`"$PSCommandPath`"",'-Artifacts',"`"$Artifacts`"")
