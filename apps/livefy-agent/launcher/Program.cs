@@ -5,7 +5,14 @@ using System.Threading;
 
 internal static class Program {
   private static void Pump(Stream source,Stream destination,bool closeDestination) {
-    try { source.CopyTo(destination);destination.Flush(); }
+    try {
+      var buffer=new byte[4096];
+      int read;
+      while((read=source.Read(buffer,0,buffer.Length))>0) {
+        destination.Write(buffer,0,read);
+        destination.Flush();
+      }
+    }
     catch(IOException) { }
     finally { if(closeDestination)destination.Close(); }
   }
