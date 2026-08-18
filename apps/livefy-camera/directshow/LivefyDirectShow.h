@@ -1,6 +1,5 @@
 #pragma once
 #include <streams.h>
-#include <algorithm>
 #include <ks.h>
 #include <ksmedia.h>
 #include <atomic>
@@ -24,6 +23,7 @@ private:
 class LivefyCameraStream:public CSourceStream,public IAMStreamConfig,public IKsPropertySet{
 public:
     LivefyCameraStream(HRESULT* result,CSource* filter);~LivefyCameraStream()override=default;
+    DECLARE_IUNKNOWN;
     STDMETHODIMP NonDelegatingQueryInterface(REFIID iid,void** object)override;
     HRESULT GetMediaType(int position,CMediaType* mediaType)override;HRESULT CheckMediaType(const CMediaType* mediaType)override;HRESULT DecideBufferSize(IMemAllocator* allocator,ALLOCATOR_PROPERTIES* properties)override;HRESULT FillBuffer(IMediaSample* sample)override;
     STDMETHODIMP SetFormat(AM_MEDIA_TYPE* mediaType)override;STDMETHODIMP GetFormat(AM_MEDIA_TYPE** mediaType)override;STDMETHODIMP GetNumberOfCapabilities(int* count,int* size)override;STDMETHODIMP GetStreamCaps(int index,AM_MEDIA_TYPE** mediaType,BYTE* capabilities)override;

@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <sddl.h>
 #include "LivefyDirectShow.h"
 
@@ -6,7 +7,7 @@ namespace{constexpr LONG Width=1080,Height=1920,Fps=30;constexpr DWORD NV12Bytes
 LivefyFrameReader::LivefyFrameReader(){Placeholder();m_thread=std::thread(&LivefyFrameReader::Run,this);}
 LivefyFrameReader::~LivefyFrameReader(){m_stopping=true;if(m_thread.joinable())m_thread.join();}
 void LivefyFrameReader::Placeholder(){const size_t y=Width*Height;m_latest.assign(NV12Bytes,128);std::fill(m_latest.begin(),m_latest.begin()+y,16);}
-void LivefyFrameReader::CopyNV12(BYTE* destination,size_t length){std::lock_guard<std::mutex>lock(m_mutex);memcpy(destination,m_latest.data(),std::min(length,m_latest.size()));}
+void LivefyFrameReader::CopyNV12(BYTE* destination,size_t length){std::lock_guard<std::mutex>lock(m_mutex);memcpy(destination,m_latest.data(),min(length,m_latest.size()));}
 bool LivefyFrameReader::ReadExact(HANDLE pipe,void* destination,DWORD length){BYTE* cursor=static_cast<BYTE*>(destination);DWORD total=0;while(total<length&&!m_stopping){DWORD read=0;if(ReadFile(pipe,cursor+total,length-total,&read,nullptr)&&read){total+=read;continue;}if(GetLastError()==ERROR_NO_DATA){Sleep(2);continue;}return false;}return total==length;}
 void LivefyFrameReader::Run(){while(!m_stopping){PSECURITY_DESCRIPTOR descriptor=nullptr;SECURITY_ATTRIBUTES security{sizeof(security),nullptr,FALSE};if(ConvertStringSecurityDescriptorToSecurityDescriptorW(L"D:(A;;GRGW;;;AU)(A;;GA;;;SY)(A;;GA;;;BA)",SDDL_REVISION_1,&descriptor,nullptr))security.lpSecurityDescriptor=descriptor;HANDLE pipe=CreateNamedPipeW(PipeName,PIPE_ACCESS_INBOUND,PIPE_TYPE_BYTE|PIPE_READMODE_BYTE|PIPE_NOWAIT,1,0,4*1024*1024,0,security.lpSecurityDescriptor?&security:nullptr);if(descriptor)LocalFree(descriptor);if(pipe==INVALID_HANDLE_VALUE){Sleep(500);continue;}while(!m_stopping){if(ConnectNamedPipe(pipe,nullptr)||GetLastError()==ERROR_PIPE_CONNECTED){m_connected=true;break;}if(GetLastError()!=ERROR_PIPE_LISTENING)break;Sleep(50);}while(!m_stopping&&m_connected){BYTE header[HeaderBytes]{};if(!ReadExact(pipe,header,HeaderBytes))break;if(memcmp(header,"LFNV",4)||header[4]!=1||U32(header+8)!=Width||U32(header+12)!=Height||U32(header+20)!=NV12Bytes)break;std::vector<BYTE>next(NV12Bytes);if(!ReadExact(pipe,next.data(),NV12Bytes))break;std::lock_guard<std::mutex>lock(m_mutex);m_latest.swap(next);}m_connected=false;DisconnectNamedPipe(pipe);CloseHandle(pipe);}}
 
