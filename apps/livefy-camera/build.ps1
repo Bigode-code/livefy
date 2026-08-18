@@ -34,8 +34,8 @@ if(!$compiler){
   $devcmd=Join-Path $installation 'Common7\Tools\VsDevCmd.bat'
   & cmd.exe /s /c "`"$devcmd`" -arch=$Platform -host_arch=x64 >nul && set"|ForEach-Object{if($_-match '^([^=]+)=(.*)$'){Set-Item -Path "env:$($matches[1])" -Value $matches[2]}}
 }
-$native=Join-Path $root 'native';cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-manager.cpp') "/Fe:$(Join-Path $artifacts 'livefy-camera-manager.exe')" /link mfplat.lib mfuuid.lib advapi32.lib
+$native=Join-Path $root 'native';cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-manager.cpp') "/Fe:$(Join-Path $artifacts 'livefy-camera-manager.exe')" /link mfplat.lib mfsensorgroup.lib mfuuid.lib ole32.lib advapi32.lib
 if($LASTEXITCODE-ne 0){throw 'camera-manager build failed.'}
-cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-test.cpp') "/Fe:$(Join-Path $artifacts 'camera-test.exe')" /link mfplat.lib mf.lib mfreadwrite.lib mfuuid.lib
+cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-test.cpp') "/Fe:$(Join-Path $artifacts 'camera-test.exe')" /link mfplat.lib mf.lib mfreadwrite.lib mfuuid.lib ole32.lib
 if($LASTEXITCODE-ne 0){throw 'camera-test build failed.'}
 Write-Output $artifacts
