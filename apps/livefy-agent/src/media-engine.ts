@@ -1,4 +1,6 @@
 import {access} from 'node:fs/promises';
+import{existsSync,readdirSync}from'node:fs';
+import{join}from'node:path';
 import {spawn,execFile,type ChildProcessWithoutNullStreams} from 'node:child_process';
 import {promisify} from 'node:util';
 import {AuthoritativeClock} from './clock.js';
@@ -7,6 +9,7 @@ import{defaultVirtualCameraProbe,VirtualCameraProbe}from'./virtual-camera-probe.
 import type {AgentMedia,AgentPlaybackState,PlaybackStatus} from './types.js';
 
 const execFileAsync=promisify(execFile);
+function resolveTool(name:'ffmpeg'|'ffprobe'){const configured=process.env[name==='ffmpeg'?'LIVEFY_FFMPEG_PATH':'LIVEFY_FFPROBE_PATH'];if(configured)return configured;const root=join(process.env.LOCALAPPDATA||'','Livefy','tools','ffmpeg');if(existsSync(root))for(const entry of readdirSync(root,{withFileTypes:true})){if(!entry.isDirectory())continue;const candidate=join(root,entry.name,'bin',`${name}.exe`);if(existsSync(candidate))return candidate}return name}
 
 export class MediaEngine{
   private readonly clock:AuthoritativeClock;
@@ -22,7 +25,7 @@ export class MediaEngine{
   private frameBuffer=Buffer.alloc(0);
   private frameOffset=0;
 
-  constructor(readonly ffmpegPath=process.env.LIVEFY_FFMPEG_PATH||'ffmpeg',readonly ffprobePath=process.env.LIVEFY_FFPROBE_PATH||'ffprobe',now?:()=>number,readonly frames:FrameTransport=defaultFrameTransport,readonly cameraProbe:VirtualCameraProbe=defaultVirtualCameraProbe){this.clock=new AuthoritativeClock(now);void this.frames.start().catch(error=>{this.lastError=error instanceof Error?error.message:'Frame transport failed'})}
+  constructor(readonly ffmpegPath=resolveTool('ffmpeg'),readonly ffprobePath=resolveTool('ffprobe'),now?:()=>number,readonly frames:FrameTransport=defaultFrameTransport,readonly cameraProbe:VirtualCameraProbe=defaultVirtualCameraProbe){this.clock=new AuthoritativeClock(now);void this.frames.start().catch(error=>{this.lastError=error instanceof Error?error.message:'Frame transport failed'})}
 
   setSession(sessionId:string|null){this.sessionId=sessionId}
 
@@ -39,6 +42,8 @@ export class MediaEngine{
   pause(){if(this.status!=='playing')return;this.clock.pause();this.status='paused';this.stopProcess()}
   stop(){this.clock.stop();this.status=this.index>=0?'ready':'idle';this.stopProcess()}
   async seek(positionMs:number){this.clock.seek(positionMs);if(this.status==='playing'){this.stopProcess();this.spawnDecoder()}}
+  async next(){if(!this.playlist.length)return;this.index=(this.index+1)%this.playlist.length;const playing=this.status==='playing';this.stopProcess();this.clock.load(this.playlist[this.index]!.durationMs!);this.status=playing?'playing':'ready';if(playing){this.clock.play();this.spawnDecoder()}}
+  async previous(){if(!this.playlist.length)return;this.index=(this.index-1+this.playlist.length)%this.playlist.length;const playing=this.status==='playing';this.stopProcess();this.clock.load(this.playlist[this.index]!.durationMs!);this.status=playing?'playing':'ready';if(playing){this.clock.play();this.spawnDecoder()}}
   setVolume(volume:number){if(!Number.isFinite(volume)||volume<0||volume>1)throw new Error('Volume must be between 0 and 1.');this.volume=volume}
   setResponseAudioPlaying(value:boolean){this.responseAudioPlaying=value}
 
