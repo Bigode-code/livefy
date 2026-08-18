@@ -30,7 +30,7 @@ public:
     STDMETHODIMP Set(REFGUID,DWORD,LPVOID,DWORD,LPVOID,DWORD)override{return E_NOTIMPL;}STDMETHODIMP Get(REFGUID propertySet,DWORD propertyId,LPVOID, DWORD,LPVOID propertyData,DWORD dataLength,DWORD* returned)override;STDMETHODIMP QuerySupported(REFGUID propertySet,DWORD propertyId,DWORD* support)override;
 private:
     HRESULT BuildMediaType(bool nv12,CMediaType* mediaType);void NV12ToYUY2(const BYTE* source,BYTE* destination);
-    LivefyFrameReader m_reader;CCritSec m_state;REFERENCE_TIME m_sampleTime=0;ULONGLONG m_nextTick=0;
+    LivefyFrameReader& m_reader;CCritSec m_state;REFERENCE_TIME m_sampleTime=0;ULONGLONG m_nextTick=0;
 };
 
 class LivefyCameraFilter:public CSource{
