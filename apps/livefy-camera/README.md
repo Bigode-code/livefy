@@ -38,6 +38,8 @@ Run PowerShell as administrator:
 .\apps\livefy-camera\repair.ps1
 ```
 
+For an isolated DirectShow COM registration diagnostic, run `register-directshow.ps1`. It validates DLL loading and the `DllRegisterServer`, `DllUnregisterServer`, `DllGetClassObject`, and `DllCanUnloadNow` exports, then reports stdout, stderr, ExitCode, Win32Exception, and HRESULT.
+
 Uninstall first calls `IMFVirtualCamera::Remove()`, then removes COM registration and the installed camera files. Camera consumers must be closed first.
 
 ## A–H test harness

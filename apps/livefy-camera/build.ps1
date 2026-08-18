@@ -42,6 +42,8 @@ cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-test.cpp') "/Fe:$(Joi
 if($LASTEXITCODE-ne 0){throw 'camera-test build failed.'}
 cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'directshow-test.cpp') "/Fe:$(Join-Path $artifacts 'directshow-test.exe')" /link strmiids.lib ole32.lib oleaut32.lib
 if($LASTEXITCODE-ne 0){throw 'directshow-test build failed.'}
+cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'register-directshow.cpp') "/Fe:$(Join-Path $artifacts 'register-directshow.exe')"
+if($LASTEXITCODE-ne 0){throw 'register-directshow build failed.'}
 if(!(Test-Path (Join-Path $classicGenerated '.git'))){git clone https://github.com/microsoft/Windows-classic-samples.git $classicGenerated}
 git -C $classicGenerated fetch --depth 1 origin $classicCommit
 git -C $classicGenerated checkout --force $classicCommit

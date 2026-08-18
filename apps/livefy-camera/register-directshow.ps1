@@ -1,0 +1,8 @@
+param([ValidateSet('register','unregister')][string]$Operation='register',[string]$Artifacts=(Join-Path $PSScriptRoot 'artifacts\x64\Release'))
+$ErrorActionPreference='Stop'
+$artifactsPath=[IO.Path]::GetFullPath($Artifacts);$helper=Join-Path $artifactsPath 'register-directshow.exe';$dll=Join-Path $artifactsPath 'LivefyCameraDirectShow.dll'
+Write-Output "backend selecionado: directshow";Write-Output "arquitetura: x64";Write-Output "DLL absoluta: $dll";Write-Output "DLL existe: $(Test-Path -LiteralPath $dll)";Write-Output "registrador absoluto: $helper";Write-Output "registrador existe: $(Test-Path -LiteralPath $helper)";Write-Output "comando: `"$helper`" $Operation `"$dll`""
+if(!(Test-Path -LiteralPath $helper)){throw "Registrador DirectShow ausente: $helper"};if(!(Test-Path -LiteralPath $dll)){throw "DLL DirectShow ausente: $dll"}
+$start=New-Object Diagnostics.ProcessStartInfo;$start.FileName=$helper;$start.Arguments="$Operation `"$dll`"";$start.UseShellExecute=$false;$start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true
+try{$process=[Diagnostics.Process]::Start($start);$stdout=$process.StandardOutput.ReadToEnd();$stderr=$process.StandardError.ReadToEnd();$process.WaitForExit();$exitCode=$process.ExitCode}catch [ComponentModel.Win32Exception]{Write-Error "Win32Exception NativeErrorCode=$($_.Exception.NativeErrorCode) HRESULT=0x$('{0:X8}' -f $_.Exception.HResult) Message=$($_.Exception.Message)";throw}
+Write-Output "stdout:`n$stdout";Write-Output "stderr:`n$stderr";Write-Output "ExitCode: $exitCode";if($exitCode-ne 0){throw "Registro DirectShow falhou. ExitCode=$exitCode. Consulte stdout/stderr e HRESULT acima."}
