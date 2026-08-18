@@ -40,9 +40,9 @@ $native=Join-Path $root 'native';cl /nologo /std:c++17 /EHsc /O2 (Join-Path $nat
 if($LASTEXITCODE-ne 0){throw 'camera-manager build failed.'}
 cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'camera-test.cpp') "/Fe:$(Join-Path $artifacts 'camera-test.exe')" /link mfplat.lib mf.lib mfreadwrite.lib mfuuid.lib ole32.lib
 if($LASTEXITCODE-ne 0){throw 'camera-test build failed.'}
-cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'directshow-test.cpp') "/Fe:$(Join-Path $artifacts 'directshow-test.exe')" /link strmiids.lib ole32.lib oleaut32.lib
+cl /nologo /std:c++17 /EHsc /O2 /MT (Join-Path $native 'directshow-test.cpp') "/Fe:$(Join-Path $artifacts 'directshow-test.exe')" /link strmiids.lib ole32.lib oleaut32.lib
 if($LASTEXITCODE-ne 0){throw 'directshow-test build failed.'}
-cl /nologo /std:c++17 /EHsc /O2 (Join-Path $native 'register-directshow.cpp') "/Fe:$(Join-Path $artifacts 'register-directshow.exe')"
+cl /nologo /std:c++17 /EHsc /O2 /MT (Join-Path $native 'register-directshow.cpp') "/Fe:$(Join-Path $artifacts 'register-directshow.exe')"
 if($LASTEXITCODE-ne 0){throw 'register-directshow build failed.'}
 if(!(Test-Path (Join-Path $classicGenerated '.git'))){git clone https://github.com/microsoft/Windows-classic-samples.git $classicGenerated}
 git -C $classicGenerated fetch --depth 1 origin $classicCommit
