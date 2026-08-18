@@ -22,7 +22,7 @@ export type AgentPlaybackState={
 export type AgentDiagnostics={
   agent:{status:'online';pid:number;uptimeMs:number};
   mediaEngine:{status:'ready'|'playing'|'paused'|'unavailable'|'error';ffmpegPath:string;ffprobePath:string;lastError:string|null};
-  virtualCamera:{name:'Livefy Camera';backend:'directshow'|'media-foundation';status:'not_installed'|'installed'|'running';installed:boolean;registered:boolean;running:boolean;consumerConnected:boolean;width:number;height:number;fps:number;pixelFormat:'NV12';framesProduced:number;framesDropped:number;lastFrameAt:string|null};
+  virtualCamera:{name:'Livefy Camera';backend:'directshow'|'media-foundation';status:'not_installed'|'installed'|'running';installed:boolean;registered:boolean;running:boolean;consumerConnected:boolean;width:number;height:number;fps:number;pixelFormat:'NV12';framesProduced:number;framesDropped:number;lastFrameAt:string|null;timing:{decoded:{frames:number;fps:number;averageIntervalMs:number;p95IntervalMs:number};ready:{frames:number;fps:number;averageIntervalMs:number;p95IntervalMs:number};sent:{frames:number;fps:number;averageIntervalMs:number;p95IntervalMs:number}}};
   audioOutput:{name:'Livefy Audio';status:'not_configured'|'ready'|'running'};
   playback:AgentPlaybackState;
 };

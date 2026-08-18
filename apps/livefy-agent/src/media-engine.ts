@@ -57,12 +57,13 @@ export class MediaEngine{
     const frameBytes=this.frames.width*this.frames.height*3/2;
     this.frameBuffer=Buffer.allocUnsafe(frameBytes);
     this.frameOffset=0;
-    this.process=spawn(this.ffmpegPath,['-hide_banner','-loglevel','error','-re','-stream_loop','-1','-ss',position,'-i',media.path,'-map','0:v:0?','-vf','fps=30,scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2,format=nv12','-an','-pix_fmt','nv12','-f','rawvideo','pipe:1'],{windowsHide:true,stdio:['pipe','pipe','pipe']});
-    this.process.stdout.on('data',chunk=>{let sourceOffset=0;while(sourceOffset<chunk.length){const bytes=Math.min(frameBytes-this.frameOffset,chunk.length-sourceOffset);chunk.copy(this.frameBuffer,this.frameOffset,sourceOffset,sourceOffset+bytes);this.frameOffset+=bytes;sourceOffset+=bytes;if(this.frameOffset===frameBytes){this.frames.push(this.frameBuffer);this.frameOffset=0}}});
-    this.process.stderr.on('data',chunk=>{const text=String(chunk).trim();if(text)this.lastError=text.slice(-1000)});
-    this.process.on('error',error=>{this.lastError=error.message;this.clock.pause();this.status='error'});
-    this.process.on('exit',code=>{this.process=null;if(this.intentionallyStopping)return;if(this.status==='playing'&&code!==0){this.clock.pause();this.status='error';this.lastError=this.lastError??`FFmpeg exited with code ${code}`}});
+    const decoder=spawn(this.ffmpegPath,['-hide_banner','-loglevel','error','-re','-stream_loop','-1','-ss',position,'-i',media.path,'-map','0:v:0?','-vf','fps=30,scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2,format=nv12','-an','-pix_fmt','nv12','-f','rawvideo','pipe:1'],{windowsHide:true,stdio:['pipe','pipe','pipe']});
+    this.process=decoder;
+    decoder.stdout.on('data',chunk=>{if(this.process!==decoder)return;let sourceOffset=0;while(sourceOffset<chunk.length){const bytes=Math.min(frameBytes-this.frameOffset,chunk.length-sourceOffset);chunk.copy(this.frameBuffer,this.frameOffset,sourceOffset,sourceOffset+bytes);this.frameOffset+=bytes;sourceOffset+=bytes;if(this.frameOffset===frameBytes){this.frames.recordDecoded();this.frames.push(this.frameBuffer);this.frameOffset=0}}});
+    decoder.stderr.on('data',chunk=>{if(this.process!==decoder)return;const text=String(chunk).trim();if(text)this.lastError=text.slice(-1000)});
+    decoder.on('error',error=>{if(this.process!==decoder)return;this.lastError=error.message;this.clock.pause();this.status='error'});
+    decoder.on('exit',code=>{if(this.process!==decoder)return;this.process=null;if(this.intentionallyStopping)return;if(this.status==='playing'&&code!==0){this.clock.pause();this.status='error';this.lastError=this.lastError??`FFmpeg exited with code ${code}`}});
   }
 
-  private stopProcess(){if(!this.process)return;this.intentionallyStopping=true;this.process.kill();this.process=null}
+  private stopProcess(){if(!this.process)return;this.intentionallyStopping=true;const decoder=this.process;this.process=null;decoder.kill()}
 }
