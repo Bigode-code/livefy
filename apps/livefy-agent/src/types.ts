@@ -23,7 +23,7 @@ export type AgentDiagnostics={
   agent:{status:'online';pid:number;uptimeMs:number};
   mediaEngine:{status:'ready'|'playing'|'paused'|'unavailable'|'error';ffmpegPath:string;ffprobePath:string;lastError:string|null};
   virtualCamera:{name:'Livefy Camera';backend:'directshow'|'media-foundation';status:'not_installed'|'installed'|'running';installed:boolean;registered:boolean;running:boolean;consumerConnected:boolean;width:number;height:number;fps:number;pixelFormat:'NV12';framesProduced:number;framesDropped:number;lastFrameAt:string|null;timing:{decoded:{frames:number;fps:number;averageIntervalMs:number;p95IntervalMs:number};ready:{frames:number;fps:number;averageIntervalMs:number;p95IntervalMs:number};sent:{frames:number;fps:number;averageIntervalMs:number;p95IntervalMs:number}}};
-  audioOutput:{name:'Livefy Audio';status:'not_configured'|'ready'|'running'};
+  audioOutput:{name:'Livefy Audio';status:'not_configured'|'ready'|'running';installed:boolean;registered:boolean;running:boolean;consumerConnected:boolean;sampleRate:48000;channels:2;format:'s16le';masterVolume:number;programVolume:number;muted:boolean;responseActive:boolean;audioClockMs:number;videoClockMs:number;avDriftMs:number;underruns:number;overruns:number;samplesProduced:number;samplesDropped:number;lastSampleAt:string|null;ducking:{enabled:boolean;level:number;attackMs:number;releaseMs:number}};
   playback:AgentPlaybackState;
   preparation:{state:'idle'|'checking_camera'|'preparing_media'|'downloading'|'loading'|'ready'|'error';sessionId:string|null;workspaceId:string|null;mediaTotal:number;mediaPrepared:number;error:string|null};
 };

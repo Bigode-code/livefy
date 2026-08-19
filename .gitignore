@@ -16,6 +16,10 @@ playwright-report/
 coverage/
 apps/livefy-camera/generated/
 apps/livefy-camera/artifacts/
+apps/livefy-audio/artifacts/
+apps/livefy-audio/native/EndpointsCommon/x64/
+apps/livefy-audio/native/TabletAudioSample/x64/
+livefy-audio-bridge.obj
 release/*.zip
 *.log
 .codex-*.png

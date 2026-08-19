@@ -1,0 +1,19 @@
+#pragma once
+#include <ntddk.h>
+
+#define IOCTL_LIVEFY_AUDIO_PUSH_PCM CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_WRITE_DATA)
+#define IOCTL_LIVEFY_AUDIO_GET_STATS CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_READ_DATA)
+#define IOCTL_LIVEFY_AUDIO_RESET CTL_CODE(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_WRITE_DATA)
+
+typedef struct _LIVEFY_AUDIO_STATS {
+    ULONGLONG BytesWritten;
+    ULONGLONG BytesRead;
+    ULONGLONG Underruns;
+    ULONGLONG Overruns;
+    ULONG BufferedBytes;
+    ULONG CapacityBytes;
+} LIVEFY_AUDIO_STATS, *PLIVEFY_AUDIO_STATS;
+
+NTSTATUS LivefyPcmInitialize(_In_ PDRIVER_OBJECT DriverObject);
+VOID LivefyPcmCleanup();
+VOID LivefyPcmRead(_Out_writes_bytes_(ByteCount) PUCHAR Destination, _In_ ULONG ByteCount);

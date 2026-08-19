@@ -28,8 +28,8 @@ export class LivefyAgent{
         case'NEXT':await this.media.next();return this.success(request.id,'STATE',this.media.getState());
         case'PREVIOUS':await this.media.previous();return this.success(request.id,'STATE',this.media.getState());
         case'SET_VOLUME':this.media.setVolume(this.number(payload.volume,'volume'));return this.success(request.id,'STATE',this.media.getState());
-        case'PLAY_RESPONSE_AUDIO':this.media.setResponseAudioPlaying(true);return this.success(request.id,'ACK',{mediaId:this.string(payload.mediaId,'mediaId'),queued:false});
-        case'STOP_RESPONSE_AUDIO':this.media.setResponseAudioPlaying(false);return this.success(request.id,'STATE',this.media.getState());
+        case'PLAY_RESPONSE_AUDIO':{const path=this.string(payload.path,'path');this.media.playResponseAudio(path);return this.success(request.id,'ACK',{path,queued:false})}
+        case'STOP_RESPONSE_AUDIO':this.media.stopResponseAudio();return this.success(request.id,'STATE',this.media.getState());
         default:return this.failure(request.id,'UNSUPPORTED_COMMAND',`Unsupported command: ${request.type}`);
       }
     }catch(error){return this.failure(request.id,'COMMAND_FAILED',error instanceof Error?error.message:'Command failed.')}
@@ -39,7 +39,8 @@ export class LivefyAgent{
     const state=this.media.getState();const error=this.media.getLastError();
     const camera=this.media.getVirtualCameraState();
     const status=camera.consumerConnected?'running':camera.installed&&camera.registered?'installed':'not_installed';
-    return{agent:{status:'online',pid:process.pid,uptimeMs:Date.now()-this.startedAt},mediaEngine:{status:error?'error':state.state==='playing'?'playing':state.state==='paused'?'paused':state.mediaId?'ready':'unavailable',ffmpegPath:this.media.ffmpegPath,ffprobePath:this.media.ffprobePath,lastError:error},virtualCamera:{name:'Livefy Camera',backend:camera.backend,status,installed:camera.installed,registered:camera.registered,running:camera.consumerConnected,consumerConnected:camera.consumerConnected,width:camera.width,height:camera.height,fps:camera.fps,pixelFormat:camera.pixelFormat,framesProduced:camera.framesProduced,framesDropped:camera.framesDropped,lastFrameAt:camera.lastFrameAt,timing:camera.timing},audioOutput:{name:'Livefy Audio',status:'not_configured'},playback:state,preparation:this.preparation};
+    const audio=this.media.getVirtualAudioState();
+    return{agent:{status:'online',pid:process.pid,uptimeMs:Date.now()-this.startedAt},mediaEngine:{status:error?'error':state.state==='playing'?'playing':state.state==='paused'?'paused':state.mediaId?'ready':'unavailable',ffmpegPath:this.media.ffmpegPath,ffprobePath:this.media.ffprobePath,lastError:error},virtualCamera:{name:'Livefy Camera',backend:camera.backend,status,installed:camera.installed,registered:camera.registered,running:camera.consumerConnected,consumerConnected:camera.consumerConnected,width:camera.width,height:camera.height,fps:camera.fps,pixelFormat:camera.pixelFormat,framesProduced:camera.framesProduced,framesDropped:camera.framesDropped,lastFrameAt:camera.lastFrameAt,timing:camera.timing},audioOutput:{name:'Livefy Audio',status:audio.consumerConnected?'running':audio.installed?'ready':'not_configured',...audio},playback:state,preparation:this.preparation};
   }
 
   private async prepare(payload:Record<string,unknown>){
